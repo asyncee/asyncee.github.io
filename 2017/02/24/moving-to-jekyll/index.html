@@ -1,0 +1,187 @@
+<html>
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name='yandex-verification' content='4db6105a4cf78b07' />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+    <meta name="description" content="Про Lektor — А так же философские мысли про прозрачность разработки и Jekyll">
+    <meta property="og:title" content="Про Lektor"/>
+    <meta property="og:description" content="А так же философские мысли про прозрачность разработки и Jekyll"/>
+    <meta property="og:url" content= "http://asyncee.github.io/2017/02/24/moving-to-jekyll/" />
+    <meta property="og:image" content= "http://asyncee.github.io/public/favicon192.png" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:locale" content= "ru_RU" />
+    <meta property="og:article:author" content= "Stanislav Lobanov" />
+    <meta property="og:article:published_time" content= "2017-02-24 00:00:00 +0300" />
+  
+
+  <title>
+    
+      Про Lektor &middot; Asyncee
+    
+  </title>
+
+  <!-- CSS -->
+  <link type="text/css" rel="stylesheet" href="/assets/main-5ea2e796cab6172348988b552f21990fe00397602469e37a9d743bcb540c3fa6.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/favicon144.png">
+  <link rel="shortcut icon" href="/public/favicon32.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+
+    <a href="/" class="sidebar-avatar">
+      <img class="sidebar-avatar__image" src="/public/avatar.jpg">
+    </a>
+
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Asyncee
+        </a>
+      </h1>
+      <p class="lead">Lobanov Stanislav</p>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      
+      
+        
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+    </nav>
+
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Про Lektor</h1>
+  <span class="post-date">Опубликовано
+
+24
+Февраля
+  
+2017
+</span>
+  <p>Так совпало, что, когда я решил вести блог, релизнулся <a href="https://www.getlektor.com/">Lektor</a>  от Армина. Судя по документации всё выглядело очень вкусно — встроенная админка для редактирования постов, расширяемая модель данных, позволяющая создать ресурс с гибкой структурой, поддержка плагинов и так далее. Да и автор такой именитый — сам Армин Ронахер, автор Flask, и тонны других полезных и действительно качественных инструментов (да, это противоречивое высказывание, но, допустим, что это так).</p>
+
+<p>Что ж, так как я пишу на Python, то грех было не попробовать. В сторону альтернатив я особо не смотрел — конечно, я знал про <code class="highlighter-rouge">Pelican</code>, <code class="highlighter-rouge">Jekyll</code>  и кучу других инструментов, но пробовать каждый из них небыло ни желания, ни времени, ведь передо мной был <code class="highlighter-rouge">Lektor</code>. Что я сделал — изучил документацию, прочитал отзывы в сообществе — в целом инструмент для создания статичных сайтов был принят любьми очень позитивно.</p>
+
+<p>Я описал модель данных (посты, категории, и прочее), адаптировал стороннюю тему (изрядно её переработав, благо, лицензия позволяла). Стал вести блог, написал первый пост, за ним второй, третий и так далее.</p>
+
+<p>По мере написания постов, я всё больше и больше сталкивался с различными проблемами и недоработками, начиная от несовершенства админки (чёрт, да это же просто поле для ввода текста без какого−либо WISYWIG — да любой <code class="highlighter-rouge">vim</code> справляется лучше) и заканчивая корявой работой сторонних плагинов. Да, по поводу плагинов у меня вопросов нет — проект молодой, плагины сторонние, разумно ожидать от них нестабильной работы и багов. Вот только в сообществе не нашлось людей, желавших заниматься поддержкой этих самых плагинов. Да и сам проект развивался очень медленно, вяло. Казалось, что Армин потерял интерес и забил.</p>
+
+<p>С того момента прошло достаточное количество времени, и я могу сказать, что <code class="highlighter-rouge">Lektor</code> не стал лучше. Да, я согласен, что это <em>Open Source</em>, тут никто никому не должен. Хочешь чего−то — форкай, дорабатывай, вливай изменения в проект. <strong>Однако</strong>, я считаю, что этот случай отдельный. Почему? Да всё просто — Армин Ронахер достаточно известный разработчик, к нему есть доверие сообщества, и вполне ожидаемо было предположить, что <code class="highlighter-rouge">Lektor</code> выстрелит, получит поддержку сообщества, будет развиваться. Однако, насколько я вижу — основные запросы сообщества так и не удовлетворены — нет хорошего редактора, реестра плагинов, проблемы с разработкой <em>frontend  (sass, webpack, etc)</em>, низкая производительность в отдельных ситуациях и так далее. Проблем куча и они не решаются.</p>
+
+<p><strong>Но это же обычная ситуация в мире открытого программного обеспечения!</strong> — можете сказать вы. Да, соглашусь. Однако, на мой взгляд, правилом хорошего тона является прозрачность намерений. Любой автор такого большого проекта так или иначе должен пояснить свою позицию, доказать, что его проект это не просто очередной <strong>side project just for fun</strong>, но целостное начинание, которым можно пользоваться, жить с ним и развиваться вместе. Если у автора нет возможностей для поддержки проекта — все мы люди — то, зачастую можно увидеть надпись <em>developers wanted</em>, и так далее. Прозрачность намерений. Это банально может быть roadmap, либо описание видения проекта, поддержка или использование проекта какой−либо компанией и так далее. Последний коммит армина был <em>4 августа 2016</em> года (ветка master) — почти 7 месяцев назад.</p>
+
+<p>Поймите мой посыл — я не говорю, что тот или иной разработчик плохой. Я не говорю, что проект плохой. Нет. Я говорю о том, что <em>на фоне известности автора и без чётко обозначенной позиции по разработке проекта</em> можно легко ошибиться и принять неправильное решение. Разумеется, это <strong>моя</strong> ошибка, и расплачиваться за неё мне — своим временем на перевод проекта на другую систему публикации.</p>
+
+<h2 id="welcome-jekyll">Welcome, Jekyll</h2>
+
+<p>Как вы уже поняли, я решил шагнуть в неизвестный мне до этого мир <code class="highlighter-rouge">Ruby</code>. На изучение <code class="highlighter-rouge">Jekyll</code>, инфраструктуры организации проектов, плагинов, сборки проекта локально + удалённо на стороне <code class="highlighter-rouge">GitHub</code> у меня ушло всего несколько часов. И вот, спустя, ещё четыре часа, мой блог уже <code class="highlighter-rouge">up and running</code> — статьи я вручную перенёс из <code class="highlighter-rouge">Lektor</code> (правил прямо в <code class="highlighter-rouge">vim</code>), натянул уже готовую тему <code class="highlighter-rouge">Hyde</code> (которую, конечно, доработал напильником — все «кишки» темы лежат прямо в проекте и это очень круто).</p>
+
+<p>Что меня особенно радует — большое количество готовых решений (плагинов) и простота их интеграции. Хочешь <code class="highlighter-rouge">assets pipeline</code>? Пожалуйста! Хочешь кастомную тему — без проблем, в интернете их сотни. Не можешь определиться, где лучше разместить блог на <code class="highlighter-rouge">Jekyll</code> онлайн? Без проблем — на любой вкус найдутся готовые решения и инструкции (имеются ввиду такие фичи как поддержка автосборки проекта гитхабом, размещение и автосборка у <code class="highlighter-rouge">Digital Ocean</code>, и т.п.).</p>
+
+<p>Думаю, что это очевидно, что сравнивать <code class="highlighter-rouge">Lektor</code> и <code class="highlighter-rouge">Jekyll</code> нет смысла — это совершенно разные проекты по уровню и инвестициям, ставить их в один ряд было бы некорректно.</p>
+
+<p>Ну и в завершение прикреплю скрин редактора, в котором я пишу этот текст — вполне себе приятный <em>markdown wisywig</em>.</p>
+
+<p><img src="/public/posts/jekyll-admin-screenshot.jpg" alt="Скриншот jekyll-admin" /></p>
+
+<h2 id="В-завершение">В завершение</h2>
+
+<p>Ну что ж, вот такой вышел противоречивый пост. Так или иначе негативный опыт — это тоже опыт, а без него я бы не пользовался сейчас благами <code class="highlighter-rouge">Jekyll</code> с его великолепным набором плагинов. Писать посты стало удобнее, думаю, что это добавит мотивации писать ещё.</p>
+
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://asyncee.github.io/2017/02/24/moving-to-jekyll/";  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "/2017/02/24/moving-to-jekyll/"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = '//asyncee-github-io.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    </div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+
+    <!-- JS -->
+    <script>
+      function initMediumZoom() {
+        mediumZoom('.content img');
+      }
+    </script>
+    <script async src="/public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Lora:400,400i,700|Roboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+  </body>
+</html>
