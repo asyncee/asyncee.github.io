@@ -200,7 +200,11 @@ s.setAttribute('data-timestamp', +new Date());
 
 
     <!-- JS -->
-    <script src="/public/js/medium-zoom.min.js"></script>
-    <script>mediumZoom('.content img');</script>
+    <script>
+      function initMediumZoom() {
+        mediumZoom('.content img');
+      }
+    </script>
+    <script async src="/public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
   </body>
 </html>
