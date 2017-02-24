@@ -1,4 +1,6 @@
 #!/bin/bash
 
+git add . && git commit -am 'Updated site' && git push
+
 bundle exec jekyll build
 cd _site && git add . && git commit -am 'Updated site' && git push
