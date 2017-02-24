@@ -1,0 +1,233 @@
+<html>
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name='yandex-verification' content='4db6105a4cf78b07' />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+    <meta name="description" content="Установка Kitematic в Linux — Или запускаем контейнеры красиво">
+    <meta property="og:title" content="Установка Kitematic в Linux"/>
+    <meta property="og:description" content="Или запускаем контейнеры красиво"/>
+    <meta property="og:url" content= "http://asyncee.github.io/2016/03/29/ustanovka-kitematic-v-linux/" />
+    <meta property="og:image" content= "http://asyncee.github.io/public/favicon192.png" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:locale" content= "ru_RU" />
+    <meta property="og:article:author" content= "Stanislav Lobanov" />
+    <meta property="og:article:published_time" content= "2016-03-29 00:00:00 +0300" />
+  
+
+  <title>
+    
+      Установка Kitematic в Linux &middot; Asyncee
+    
+  </title>
+
+  <!-- CSS -->
+  <link type="text/css" rel="stylesheet" href="/assets/main-4433e655571e47206a4c519eaec29e54d31f24c8431c0d8759bec19b7beaf610.css">
+  <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Lora:400,400i,700|Roboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/favicon144.png">
+  <link rel="shortcut icon" href="/public/favicon32.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+
+    <a href="/" class="sidebar-avatar">
+      <img class="sidebar-avatar__image" src="/public/avatar.jpg">
+    </a>
+
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Asyncee
+        </a>
+      </h1>
+      <p class="lead">Lobanov Stanislav</p>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      
+      
+        
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    </nav>
+
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Установка Kitematic в Linux</h1>
+  <span class="post-date">Опубликовано
+
+29
+Марта
+  
+2016
+</span>
+  <p><img src="/public/posts/kite.png" alt="kitematic" /></p>
+
+<h2 id="Что-такое-kitematic">Что такое Kitematic</h2>
+
+<p><a href="https://kitematic.com/"><strong>Kitematic</strong></a> — инструмент, предоставляющий графический интерфейс для работы с контейнерами docker. Если кратко — позволяет разворачивать контейнеры в несколько кликов, интегрируется с Docker Hub, позволяет видеть актуальные логи запущенного процесса и производить базовую настройку в GUI.</p>
+
+<p>Конечно, консоль никто не отменял, но для базовых вещей вполне подходит. К тому же удобно использовать этот инструмент для тестирования разных технологий и сервисов. Захотел посмотреть блоговую платформу <strong>Ghost</strong> — развернул контейнер, не понравилась — удалил. На всё про всё уйдёт десять минут.</p>
+
+<h3 id="Установка-в-linux">Установка в Linux</h3>
+<p>Пользователи Linux как обычно, страдают — поддерживается только Mac и Windows, однако недавно была реализована установка для linux в ручном режиме. Я буду приводить инструкции для Debian / Ubuntu, но в ArchLinux, вроде, тоже работает.</p>
+
+<p><strong>Для параноиков</strong>: обратите внимание, что в инструкциях ниже предлагается производить установку посредством выполнения скриптов из (относительно) не проверенных источников. Рекомендую (на всякий случай) проверить что там внутри.</p>
+
+<h3 id="Установка-зависимостей-kitematic">Установка зависимостей Kitematic</h3>
+
+<p>Ставим системные пакеты в терминале под рутом:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>apt-get install build-essential libcanberra-gtk-module
+</code></pre>
+</div>
+
+<p>Устанавливаем nodejs . На данный момент поддерживается версия 4.2.2. Разумно для этого использовать nvm:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh | bash
+<span class="gp">$ </span>. ~/.nvm/nvm.sh
+</code></pre>
+</div>
+
+<p>Для работы nvm, необходимо добавить следующие строки в <code class="highlighter-rouge">~/.profile</code> или <code class="highlighter-rouge">~/.bashrc</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">export </span><span class="nv">NVM_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.nvm"</span>
+<span class="o">[</span> -s <span class="s2">"</span><span class="nv">$NVM_DIR</span><span class="s2">/nvm.sh"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> . <span class="s2">"</span><span class="nv">$NVM_DIR</span><span class="s2">/nvm.sh"</span> <span class="c"># This loads nvm</span>
+</code></pre>
+</div>
+
+<p>Теперь можно поставить nodejs необходимой версии и сделать её интерпретатором по-умолчанию:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>nvm install 4.2.2
+nvm <span class="nb">alias </span>default v4.2.2
+</code></pre>
+</div>
+
+<p>Чтобы проверить, всё-ли вы сделали правильно, лучше выполнить команду <code class="highlighter-rouge">node -v</code> и удостовериться, что версия <code class="highlighter-rouge">4.2.2</code>.</p>
+
+<h3 id="Установка-docker">Установка Docker</h3>
+
+<p>Если Docker уже стоит - прекрасно, если нет, то ставим его:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl -sSL https://get.docker.com/ | sudo sh
+<span class="gp">$ </span>sudo gpasswd -a <span class="k">${</span><span class="nv">USER</span><span class="k">}</span> docker
+<span class="gp">$ </span>sudo service docker restart
+<span class="gp">$ </span>newgrp docker
+</code></pre>
+</div>
+
+<h3 id="Установка-kinematic">Установка Kinematic</h3>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd</span> ~/bin
+<span class="gp">$ </span>git clone https://github.com/docker/kitematic
+<span class="gp">$ </span><span class="nb">cd </span>kitematic/
+<span class="gp">$ </span>make
+<span class="gp">$ </span>npm start <span class="c"># запуск приложения</span>
+</code></pre>
+</div>
+
+<p>Команда <code class="highlighter-rouge">make</code> соберёт приложение. Для запуска можно использовать команду <code class="highlighter-rouge">npm start</code>, но я предпочёл создать скрипт для запуска:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat ~/bin/kite
+
+<span class="c">#!/bin/bash</span>
+
+bash -c <span class="s1">'cd /home/asyncee/bin/kitematic &amp;&amp; npm start'</span>
+</code></pre>
+</div>
+
+<h3 id="Читайте-также">Читайте также</h3>
+
+<ul>
+  <li><a href="https://github.com/docker/kitematic/wiki/Early-Linux-Support">Документация по-установке на английском</a></li>
+  <li><a href="https://kitematic.com/">Сайт Kitematic</a></li>
+  <li><a href="https://www.docker.com/">Сайт Docker</a></li>
+</ul>
+
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://asyncee.github.io/2016/03/29/ustanovka-kitematic-v-linux/";  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "/2016/03/29/ustanovka-kitematic-v-linux/"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = '//asyncee-github-io.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    </div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+
+    <!-- JS -->
+    <script src="/public/js/medium-zoom.min.js"></script>
+    <script>mediumZoom('.content img');</script>
+  </body>
+</html>

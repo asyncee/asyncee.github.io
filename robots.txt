@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow:
+Sitemap: http://asyncee.github.io/sitemap.xml
+Host: asyncee.github.io
