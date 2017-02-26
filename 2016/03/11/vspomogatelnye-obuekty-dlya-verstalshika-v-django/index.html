@@ -28,7 +28,10 @@
   </title>
 
   <!-- CSS -->
-  <link type="text/css" rel="stylesheet" href="/assets/main-5ea2e796cab6172348988b552f21990fe00397602469e37a9d743bcb540c3fa6.css">
+  <link type="text/css" rel="stylesheet" href="/assets/main-b2b18d0bc5c513e7632594126d8f4e10176140104b0f66dcb6fdda33b42339ce.css">
+
+  <!-- js -->
+  <script type="text/javascript" src="/assets/main-cff441d8fcf32afbe26ec857d859a4f0372dae11ce064e64a3715eefb8f1e8bf.js"></script>
 
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/favicon144.png">
@@ -45,7 +48,10 @@
   <div class="container sidebar-sticky">
 
     <a href="/" class="sidebar-avatar">
-      <img class="sidebar-avatar__image" src="/public/avatar.jpg">
+      <div class="avatar">
+        <img class="avatar__fallback" src="/public/avatar/avatar-140-blur.jpg">
+        <img class="avatar__image fadein-on-load" src="/public/avatar/avatar.jpg">
+      </div>
     </a>
 
     <div class="sidebar-about">
@@ -250,11 +256,6 @@ s.setAttribute('data-timestamp', +new Date());
 
 
     <!-- JS -->
-    <script>
-      function initMediumZoom() {
-        mediumZoom('.content img');
-      }
-    </script>
     <script async src="/public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
     <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Lora:400,400i,700|Roboto+Mono&amp;subset=cyrillic" rel="stylesheet">
   </body>
