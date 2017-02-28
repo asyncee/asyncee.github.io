@@ -4,7 +4,7 @@ install:
 build:
 	bundler exec jekyll build --unpublished
 
-watch:
+serve:
 	bundler exec jekyll serve --watch --unpublished
 
 push:
