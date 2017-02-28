@@ -4,68 +4,13 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-02-28T17:34:53+03:00</updated>
+ <updated>2017-02-28T17:35:36+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Lobanov Stanislav</name>
    <email></email>
  </author>
 
- 
- <entry>
-   <title>Великолепный Python 3</title>
-   <link href="http://asyncee.github.io/2017/02/28/gorgeous-python-3/"/>
-   <updated>2017-02-28T00:00:00+03:00</updated>
-   <id>http://asyncee.github.io/2017/02/28/gorgeous-python-3</id>
-   <content type="html">&lt;p&gt;В этой стате я опишу возможности Python 3,  которые облегчают жизнь разработчика. Доработок в новой версии языка действительно много, поэтому я опишу только наиболее заметные изменения. Я пишу код на &lt;code class=&quot;highlighter-rouge&quot;&gt;Python 3&lt;/code&gt; каждый день, и ежедневное использование этих возможностей приносит мне большое удовольствие. Итак, поехали!&lt;/p&gt;
-
-&lt;h2 id=&quot;print-теперь-функция-а-не-оператор&quot;&gt;print теперь функция, а не оператор&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)&lt;/code&gt; &lt;a href=&quot;https://docs.python.org/3/library/functions.html#print&quot;&gt;(документация).&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Да, теперь &lt;code class=&quot;highlighter-rouge&quot;&gt;print&lt;/code&gt; это функция, а не оператор, так что теперь необходимо использовать скобки: &lt;code class=&quot;highlighter-rouge&quot;&gt;print(&quot;string&quot;)&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;unicode-поумолчанию&quot;&gt;unicode по−умолчанию&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit&quot;&gt;Документация по изменениям str vs unicode&lt;/a&gt;
-&lt;a href=&quot;https://www.python.org/dev/peps/pep-3120/&quot;&gt;Документация по utf-8 кодировке по−умолчанию&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Теперь все строки в &lt;strong&gt;Unicode&lt;/strong&gt; по−умолчанию, кодировка, конечно−же, &lt;strong&gt;utf-8&lt;/strong&gt;. Искренне рад этому изменению, так как теперь можно навсегда забыть литерал &lt;code class=&quot;highlighter-rouge&quot;&gt;u&quot;&quot;&lt;/code&gt; и писать более чистый код.&lt;/p&gt;
-
-&lt;h2 id=&quot;числовой-тип-поумолчанию--int&quot;&gt;числовой тип по−умолчанию — int&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0237/&quot;&gt;Документация&lt;/a&gt;
-Да, теперь число при выполнении различных операций не может поменять свой тип и стать &lt;code class=&quot;highlighter-rouge&quot;&gt;long&lt;/code&gt;, например. По−факту, &lt;code class=&quot;highlighter-rouge&quot;&gt;long&lt;/code&gt; из Python 2 просто переименовали в &lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Unpacking generalizations:
-http://www.blog.pythonlibrary.org/2017/02/21/python-3-unpacking-generalizations/
-https://www.python.org/dev/peps/pep-0448/&lt;/p&gt;
-
-&lt;p&gt;Extended Iterable Unpacking »&amp;gt; a, *spam, b = ‘1,2,3,4,5’.split(‘,’)&lt;/p&gt;
-
-&lt;p&gt;true division PEP 238 – Changing the Division Operator
-https://www.python.org/dev/peps/pep-0238/&lt;/p&gt;
-
-&lt;p&gt;генераторы словарей&lt;/p&gt;
-
-&lt;p&gt;Keyword only arguments:
-https://www.python.org/dev/peps/pep-3102/&lt;/p&gt;
-
-&lt;p&gt;Exception chaining: теперь логи понятнее&lt;/p&gt;
-
-&lt;p&gt;PEP 498, formatted string literals.
-PEP 515, underscores in numeric literals.&lt;/p&gt;
-
-&lt;p&gt;The dict type has been reimplemented to use a more compact representation based on a proposal by Raymond Hettinger and similar to the PyPy dict implementation. This resulted in dictionaries using 20% to 25% less memory when compared to Python 3.5.&lt;/p&gt;
-
-&lt;p&gt;как следствие: The class attribute definition order is now preserved.
-The order of elements in **kwargs now corresponds to the order in which keyword arguments were passed to the function.&lt;/p&gt;
-
-&lt;p&gt;https://docs.python.org/3/reference/datamodel.html#class-customization&lt;/p&gt;
-
-&lt;p&gt;что не нужно писать super и наследоваться от object (new style classes)&lt;/p&gt;
-
-&lt;p&gt;Что я не люблю: type hints&lt;/p&gt;
-</content>
- </entry>
  
  <entry>
    <title>Про Lektor</title>
