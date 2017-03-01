@@ -1,11 +1,8 @@
 install:
 	bundler install
 
-build:
-	bundler exec jekyll build --unpublished
-
 serve:
-	bundler exec jekyll serve --watch --unpublished
+	bundler exec jekyll serve --watch --drafts
 
 push:
 	JEKYLL_ENV=production bundle exec jekyll build
