@@ -4,13 +4,200 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-03-02T14:03:10+03:00</updated>
+ <updated>2017-03-02T14:06:02+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Lobanov Stanislav</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Великолепный Python 3</title>
+   <link href="http://asyncee.github.io/2017/03/02/gorgeous-python-3/"/>
+   <updated>2017-03-02T00:00:00+03:00</updated>
+   <id>http://asyncee.github.io/2017/03/02/gorgeous-python-3</id>
+   <content type="html">&lt;p&gt;В этой стате я опишу возможности Python 3,  которые облегчают жизнь разработчика. Доработок в новой версии языка действительно много, поэтому я опишу только наиболее заметные изменения. Я пишу код на python каждый день, и ежедневное использование этих возможностей приносит мне большое удовольствие. Итак, поехали!&lt;/p&gt;
+
+&lt;h2 id=&quot;print-теперь-функция-а-не-оператор&quot;&gt;print теперь функция, а не оператор&lt;/h2&gt;
+
+&lt;p&gt;Да, теперь &lt;code class=&quot;highlighter-rouge&quot;&gt;print&lt;/code&gt; это функция, а не оператор, так что теперь необходимо использовать скобки: &lt;code class=&quot;highlighter-rouge&quot;&gt;print(&quot;string&quot;)&lt;/code&gt;.  Сигнатура функции такая:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;' '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stdout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flush&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.python.org/3/library/functions.html#print&quot;&gt;Подробнее в документации.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;unicode-поумолчанию&quot;&gt;unicode по−умолчанию&lt;/h2&gt;
+
+&lt;p&gt;Теперь все строки в &lt;strong&gt;Unicode&lt;/strong&gt; по−умолчанию, а кодировка, конечно−же, &lt;strong&gt;utf-8&lt;/strong&gt;. Искренне рад этому изменению, так как можно навсегда забыть про литерал &lt;code class=&quot;highlighter-rouge&quot;&gt;u&quot;&quot;&lt;/code&gt; и писать более чистый код.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit&quot;&gt;Документация по изменениям str vs unicode.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-3120/&quot;&gt;Документация по utf-8 кодировке по−умолчанию (PEP-3120).&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;Числовой-тип-поумолчанию--int&quot;&gt;Числовой тип по−умолчанию — int&lt;/h2&gt;
+
+&lt;p&gt;Да, теперь число при выполнении различных операций не может поменять свой тип и стать &lt;code class=&quot;highlighter-rouge&quot;&gt;long&lt;/code&gt;, например. По−факту, &lt;code class=&quot;highlighter-rouge&quot;&gt;long&lt;/code&gt; из Python 2 просто переименовали в &lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0237/&quot;&gt;Документация (PEP-237).&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Распаковка&quot;&gt;Распаковка&lt;/h2&gt;
+
+&lt;p&gt;В PEP-448 определены дополнительные возможности для использования операторов распаковки итератора и словаря (&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;**&lt;/code&gt;). Их можно использовать произвольное количество раз, например:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict_a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'one'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict_b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'two'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dict_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dict_b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'one'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'two'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list_a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list_b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list_b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Так что можно обойтись без &lt;code class=&quot;highlighter-rouge&quot;&gt;dict.update(another_dict)&lt;/code&gt;. Работает, начиная с &lt;strong&gt;Python 3.5&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ещё одно замечательное изменение в языке — расширенная распаковка. Теперь можно указать переменную, в которую будут помещены все элементы, не указанные явно. Проще пояснить на примере:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Как видно, в переменную &lt;code class=&quot;highlighter-rouge&quot;&gt;other&lt;/code&gt; попали все элементы, кроме первого и последнего.&lt;/p&gt;
+
+&lt;p&gt;Код стал более чистым (пример из документации):&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# было&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# стало&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;seq&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0448/&quot;&gt;Документация (PEP-448).&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-3132/&quot;&gt;Документация (PEP-3132).&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;Настоящее-деление&quot;&gt;Настоящее деление&lt;/h2&gt;
+
+&lt;p&gt;Наконец−то в Python 3 догадались реализовать настоящее деление. Ранее деление было неочевидным — для &lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;long&lt;/code&gt; возвращалась целая часть, а для &lt;code class=&quot;highlighter-rouge&quot;&gt;float&lt;/code&gt; — приблизительный результат деления:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;7.0&lt;/span&gt;
+&lt;span class=&quot;mf&quot;&gt;1.7142857142857142&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Разумеется такое поведение по−умолчанию приводило к ошибкам в работе программ, когда на вход подавалось целое число (&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;long&lt;/code&gt;) вместо дробного. Теперь эту ситуацию исправили и деление с помощью оператора &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; возвращает ожидаемый результат.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0238/&quot;&gt;Документация (PEP-238).&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Только-ключевые-аргументы&quot;&gt;Только ключевые аргументы&lt;/h2&gt;
+
+&lt;p&gt;PEP-3102 определяет новый вид аргументов, которые могут быть переданы в функцию только по отдельному ключевому слову, но не через позиционный параметр. Суть в том, что ранее нельзя было определить аргументы переменной длины (&lt;code class=&quot;highlighter-rouge&quot;&gt;*args&lt;/code&gt;), а за ними какие−то ключевые аргументы. Это было синтаксической ошибкой. Чтобы её обойти, приходилось определять сигнатуру функции как&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kwargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;и получать ключевые аргументы уже оттуда, например как &lt;code class=&quot;highlighter-rouge&quot;&gt;x = kwargs.get('x')&lt;/code&gt;. Теперь эта проблема решена и доступна вот такая запись:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;То есть Python 3 позволяет писать более чистый код на уровне синтаксиса языка.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-3102/&quot;&gt;Документация (PEP-3102).&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Форматируемые-строковые-литералы&quot;&gt;Форматируемые строковые литералы&lt;/h2&gt;
+
+&lt;p&gt;С момента релиза &lt;strong&gt;Python 3.6&lt;/strong&gt;, эту тему уже успели раскрыть во множестве изданий, поэтому подробно останавливаться на ней не буду. Суть в том, что строки можно форматировать, определяя подстановки в самой строке и работать это будет точно так же, как если был вызван метод &lt;code class=&quot;highlighter-rouge&quot;&gt;format&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Fred&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;He said his name is {name}.&quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;'He said his name is Fred.'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;precision&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decimal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Decimal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;12.34567&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;result: {value:{width}.{precision}}&quot;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# nested fields&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;'result:      12.35'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0498/&quot;&gt;Документация (PEP-498).&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Подчёркивания-в-числах&quot;&gt;Подчёркивания в числах&lt;/h2&gt;
+
+&lt;p&gt;Возможно эта возможность в языке совсем и незначительная, но мне она очень нравится, так как теперь можно приводить большие числа в более читаемый вид:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# было&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000000&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# стало&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_000_000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0515/&quot;&gt;Документация (PEP-515).&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Новая-реализация-словарей&quot;&gt;Новая реализация словарей&lt;/h2&gt;
+
+&lt;p&gt;Начиная с &lt;strong&gt;Python 3.6&lt;/strong&gt; появилась новая реализация словарей, которая уменьшает объём потребляемой памяти на 20-25% по сравнению с версией 3.5.&lt;/p&gt;
+
+&lt;p&gt;Так же реализация словаря в &lt;em&gt;Python 3.6&lt;/em&gt; сохраняет порядок атрибутов, но это всего лишь деталь реализации интерпретатора &lt;em&gt;CPython&lt;/em&gt;. То есть, в &lt;em&gt;Pypy&lt;/em&gt; или любой другой версии интерпретатора словарь может быть не упорядоченным, что приведёт к ошибкам в программе.&lt;/p&gt;
+
+&lt;p&gt;Однако теперь гарантируется сохранение порядка определения атрибутов, а так же порядок элементов в &lt;code class=&quot;highlighter-rouge&quot;&gt;**kwargs&lt;/code&gt; соответствует порядку, в котором эти элементы переданы в функцию.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.python.org/3/whatsnew/3.6.html#pep-520-preserving-class-attribute-definition-order&quot;&gt;Подробнее в документации.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Возможность-модификации-подкласса-без-использования-метаклассов&quot;&gt;Возможность модификации подкласса без использования метаклассов&lt;/h2&gt;
+
+&lt;p&gt;Появилась возможность писать классы, которые изменяют поведение своих подклассов. По сути, этот функционал похож на написание декоратора класса, с тем отличием, что влияет он на все будущие подклассы, а не на один конкретный класс. Суть в том, что какие−то простые вещи, такие как, реестр подклассов, теперь можно реализовать без использования метаклассов.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PluginBase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;_plugins&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init_subclass__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kwargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__init_subclass__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kwargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@classmethod&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_plugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_known_plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FooPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Plugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;foo_plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;В данном примере, при инициализации подкласса &lt;code class=&quot;highlighter-rouge&quot;&gt;FooPlugin&lt;/code&gt;, выполняется метод &lt;code class=&quot;highlighter-rouge&quot;&gt;__init_subclass__&lt;/code&gt;. Переменная &lt;code class=&quot;highlighter-rouge&quot;&gt;cls&lt;/code&gt; указывает на сам инициализируемый подкласс. Далее информация о новом подклассе записывается в переменную &lt;code class=&quot;highlighter-rouge&quot;&gt;_plugins&lt;/code&gt; базового класса (см. &lt;a href=&quot;https://docs.python.org/3.6/reference/datamodel.html&quot;&gt;Python Data Model&lt;/a&gt; / method resolution order). Ну, и обратите внимание, что при инициализации подкласса на его поведение можно влиять с помощью параметров &lt;code class=&quot;highlighter-rouge&quot;&gt;**kwargs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.python.org/3/reference/datamodel.html#class-customization&quot;&gt;Документация.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;Заключение&quot;&gt;Заключение&lt;/h2&gt;
+
+&lt;p&gt;На самом деле в Python есть огромное количество других нововведений и улучшений, но в данной статье я перечислил только самые важные для меня. За кадром остались &lt;code class=&quot;highlighter-rouge&quot;&gt;type hints&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;new style classes&lt;/code&gt;, улучшения в поддержке асинхронного программирования и много чего ещё. Для ознакомления с ними рекомендую почитать &lt;a href=&quot;https://docs.python.org/3/whatsnew/&quot;&gt;What’s new in Python&lt;/a&gt;, там действительно много интересного.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Про Lektor</title>
