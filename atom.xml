@@ -4,13 +4,53 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-03-03T22:01:21+03:00</updated>
+ <updated>2017-03-10T23:38:24+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Lobanov Stanislav</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Как настроить flake8 для работы в Pycharm 2016.3</title>
+   <link href="http://asyncee.github.io/2017/03/10/how-to-configure-flake-8-with-pycharm-2016-3/"/>
+   <updated>2017-03-10T00:00:00+03:00</updated>
+   <id>http://asyncee.github.io/2017/03/10/how-to-configure-flake-8-with-pycharm-2016-3</id>
+   <content type="html">&lt;p&gt;Потребовалось мне настроить &lt;em&gt;flake8&lt;/em&gt; в &lt;em&gt;Pycharm&lt;/em&gt; таким образом, чтобы проверялся весь проект сразу и по итогу запуска выдавались кликабельные результаты в консоли — щёлкнул на проблемный файл и сразу перешёл на нужное место.&lt;/p&gt;
+
+&lt;p&gt;В интернете есть много примеров конфигурации, но ни одного работающего из коробки я не нашёл, поэтому публикую своё решение.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Открываем проект&lt;/li&gt;
+  &lt;li&gt;Идём в меню &lt;em&gt;File&lt;/em&gt; → &lt;em&gt;Settings&lt;/em&gt;, либо нажимаем &lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl + Alt + S&lt;/code&gt; (в Linux).&lt;/li&gt;
+  &lt;li&gt;Переходим в &lt;em&gt;Tools&lt;/em&gt; → &lt;em&gt;External tools&lt;/em&gt; и нажимаем на +, чтобы добавить новую запись.&lt;/li&gt;
+  &lt;li&gt;Заполняем форму как на скриншоте ниже:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/pycharm-flake8.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Обратите внимание, что для вашего проекта, возможно, потребуется по−другому заполнить поля &lt;em&gt;Parameters&lt;/em&gt; и &lt;em&gt;Working directory&lt;/em&gt;. В моём случае всё заработало именно в такой конфигурации.&lt;/p&gt;
+
+&lt;ol start=&quot;5&quot;&gt;
+  &lt;li&gt;Нажимаем кнопку &lt;em&gt;Output filters&lt;/em&gt; и далее добавляем новый фильтр, который будет парсить результаты выдачи &lt;em&gt;Flake 8&lt;/em&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/pycharm-flake8-filters.png&quot; alt=&quot;Настройка фильтров&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Под Linux есть такой вот баг, с обрезанием поля ввода, поэтому дублирую:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$FILE_PATH$\:$LINE$\:$COLUMN$\:.*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;В итоге, после запуска &lt;em&gt;Flake 8&lt;/em&gt; (из меню &lt;em&gt;Tools&lt;/em&gt; → &lt;em&gt;External tools&lt;/em&gt;) будет такой результат:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/pycharm-flake8-results.png&quot; alt=&quot;Кликабельные результаты&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Изображение взято &lt;a href=&quot;https://habrahabr.ru/company/dataart/blog/318776/&quot;&gt;отсюда&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Великолепный Python 3</title>
