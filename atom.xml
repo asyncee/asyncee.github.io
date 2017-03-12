@@ -4,7 +4,7 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-03-12T12:28:16+03:00</updated>
+ <updated>2017-03-12T12:29:42+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Lobanov Stanislav</name>
@@ -34,7 +34,7 @@ git remote &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;-url --add --push al
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Готово. Теперь можно залить все изменения в оба репозитория одновременно с помощью комады&lt;/p&gt;
+&lt;p&gt;Готово. Теперь можно залить все изменения в оба репозитория одновременно с помощью команды&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push all
 &lt;/code&gt;&lt;/pre&gt;
