@@ -4,13 +4,55 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-03-11T10:26:16+03:00</updated>
+ <updated>2017-03-12T12:28:16+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Lobanov Stanislav</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Git: как сделать push в несколько репозиториев одновременно</title>
+   <link href="http://asyncee.github.io/2017/03/12/how-to-push-to-multiple-git-remotes/"/>
+   <updated>2017-03-12T00:00:00+03:00</updated>
+   <id>http://asyncee.github.io/2017/03/12/how-to-push-to-multiple-git-remotes</id>
+   <content type="html">&lt;p&gt;Понадобилось мне залить код одновременно в несколько репозиториев. Один репо лежит в &lt;em&gt;Dropbox&lt;/em&gt;, второй в &lt;em&gt;Gitlab&lt;/em&gt;. В обоих хранится один и тот же код проекта.&lt;/p&gt;
+
+&lt;p&gt;Решить эту задачу можно очень просто — &lt;em&gt;Git&lt;/em&gt; ультракрут и имеет красивое решение из коробки — нужно создать новый remote и указать для него адреса репозиториев, куда будет заливаться код.&lt;/p&gt;
+
+&lt;p&gt;Сделать это можно двумя способами — из консоли, с помощью команд &lt;em&gt;Git&lt;/em&gt;, и вручную отредактировав файл &lt;code class=&quot;highlighter-rouge&quot;&gt;.git/config&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Итак, вот, что нужно сделать:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Создать новый remote&lt;/span&gt;
+git remote add all user@host:repo.git
+
+&lt;span class=&quot;c&quot;&gt;# Настроить адреса репозиториев&lt;/span&gt;
+git remote &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;-url --add --push all user@host:repo.git
+git remote &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;-url --add --push all /home/user/Dropbox/repo.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Готово. Теперь можно залить все изменения в оба репозитория одновременно с помощью комады&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push all
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Просто и удобно. Конфигурационный файл &lt;code class=&quot;highlighter-rouge&quot;&gt;.git/config&lt;/code&gt; в итоге будет иметь такой вид:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Стандартное содержимое разделов core и remote &quot;origin&quot; опущено&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;remote &lt;span class=&quot;s2&quot;&gt;&quot;all&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+   pushurl &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; user@host:repo.git
+   pushurl &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /home/user/Dropbox/repo.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Я предпочитаю редактировать &lt;code class=&quot;highlighter-rouge&quot;&gt;.git/config&lt;/code&gt; напрямую. Информация актуальна для Git 2.7.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Как настроить flake8 для работы в Pycharm 2016.3</title>
