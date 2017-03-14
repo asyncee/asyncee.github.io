@@ -4,13 +4,97 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-03-12T12:29:42+03:00</updated>
+ <updated>2017-03-14T20:09:20+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Lobanov Stanislav</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Продвинутые запросы в Django: сортировка событий по дате</title>
+   <link href="http://asyncee.github.io/2017/03/14/advanced-django-querying-sorting-events-by-date/"/>
+   <updated>2017-03-14T00:00:00+03:00</updated>
+   <id>http://asyncee.github.io/2017/03/14/advanced-django-querying-sorting-events-by-date</id>
+   <content type="html">&lt;p&gt;Представьте ситуацию, в которой в нашем приложении были бы события (запланированные задачи, встречи, Python−конференции по всему миру), происходящие в разные моменты времени. Мы хотели бы отображать их пользователю в виде простого списка. Учитывая, что мы в Феврале 2017 года, какой способ сортировки событий был бы лучшим с точки зрения пользователя?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/advanced-django-querying/chronological.png&quot; alt=&quot;хронологический порядок событий&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Чтобы было проще ответить, мы можем немного изменить вопрос: какое событие из списка было бы наиболее значимо для пользователя? Я полагаю, что хороший ответ — ближайшее предстоящее мероприятие &lt;strong&gt;DjangoCon Europe&lt;/strong&gt;. Круто, покажем его первым. Какое событие второе по значимости? Ну, учитывая, что &lt;strong&gt;PyCamp Argentina&lt;/strong&gt; и &lt;strong&gt;PyCon Brasil&lt;/strong&gt; давно прошли, то хорошим выбором была бы конференция &lt;strong&gt;PyCon US&lt;/strong&gt;. У нас осталось два прошедших события, какое из них должно идти следующим? По моему личному мнению, самые недавние события должны быть первыми, чем старее событие, тем оно менее важно. Итак, вот какой порядок мы придумали в итоге:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/advanced-django-querying/best.png&quot; alt=&quot;лучший порядок событий&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Давайте взглянем поближе, что мы сделали. Сначала идут предстоящие события, упорядоченные хронологически (т.е. по порядку наступления), а затем прошедшие события, упорядоченные в обратном хронологическом порядке. Странно.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/advanced-django-querying/chronological_directions.png&quot; alt=&quot;хронологические направления&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Хорошо, и как нам теперь построить запрос в базу данных, чтобы отобразить эти события во вьюхе Django?&lt;/p&gt;
+
+&lt;h2 id=&quot;Простой-подход&quot;&gt;Простой подход&lt;/h2&gt;
+
+&lt;p&gt;Простым решением было бы написать два отдельных запроса и соединить результаты. Вот, как это могло бы выглядеть:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;django.utils&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timezone&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;myapp.models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;EventListView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;generics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ListView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_queryset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;now&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timezone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;upcoming&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__gte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;order_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'date'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;passed&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__lt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;order_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'-date'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upcoming&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;passed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Главная проблема здесь то, что выполняя эти два запроса, мы извлекаем ВСЕ события из базы. Это станет проблемой, как только у нас появится много событий. Обычным решением является разбиение на страницы, но в данном случае пагинация не поможет. Нам всегда придётся выполнить оба запроса заранее, чтобы составить из них единый список, и только потом сделать срез (slice) списка для формирования страницы.&lt;/p&gt;
+
+&lt;h2 id=&quot;Правильный-подход&quot;&gt;Правильный подход&lt;/h2&gt;
+
+&lt;p&gt;Нам нужен способ вернуть события в правильном порядке за один запрос. Чтобы этого достигнуть, нам нужно использовать более продвинутые возможности Django ORM. Мы разобьём решение на две части. В первой, мы отделим грядущие события от прошедших и заставим будущие события отображаться в начале списка.&lt;/p&gt;
+
+&lt;p&gt;Мы воспользуемся операторами Django QuerySet &lt;code class=&quot;highlighter-rouge&quot;&gt;Case&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;When&lt;/code&gt;. В этом посте я не затрону их подробно, так что, если вы не знаете как их использовать, рекомендую прочитать &lt;a href=&quot;https://micropyramid.com/blog/django-conditional-expression-in-queries/&quot;&gt;этот блогпост&lt;/a&gt;. Также мы используем &lt;code class=&quot;highlighter-rouge&quot;&gt;annotations&lt;/code&gt;. (&lt;a href=&quot;https://docs.djangoproject.com/en/1.10/topics/db/aggregation/#generating-aggregates-for-each-item-in-a-queryset&quot;&gt;читайте в документации Django&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Вот первая часть нашего запроса:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timezone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;relevance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Case&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;When&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__gte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;When&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__lt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;output_field&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IntegerField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;order_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'relevance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Мы аннотируем предстоящие события релевантностью &lt;code class=&quot;highlighter-rouge&quot;&gt;relevance = 1&lt;/code&gt;и прошедшие &lt;code class=&quot;highlighter-rouge&quot;&gt;relevance = 2&lt;/code&gt;. Когда мы упорядочиваем запрос по релевантности, будущие события располагаются перед прошедшими:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/posts/advanced-django-querying/intermediary.png&quot; alt=&quot;промежуточная сортировка&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Выглядит неплохо, но мы ещё не закончили. Ближайшие события показываются в правильном порядке, а прошедшие в обратном. Вторая часть немного сложнее, так как предстоящие события идут в &lt;em&gt;порядке возрастания даты&lt;/em&gt;, а прошедшие — &lt;em&gt;в порядке убывания&lt;/em&gt;. Решение такое — аннотировать разницу во времени между текущей датой и датой события.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timezone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;relevance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Case&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;When&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__gte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;When&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__lt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;output_field&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IntegerField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;timediff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Case&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;When&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__gte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'date'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;When&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;date__lt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'date'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;output_field&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DurationField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;order_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'relevance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'timediff'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Обратите внимание, что предстоящие события аннотированы как &lt;code class=&quot;highlighter-rouge&quot;&gt;дата события - текущая дата&lt;/code&gt;, а прошедшие как &lt;code class=&quot;highlighter-rouge&quot;&gt;текущая дата - дата события&lt;/code&gt;. Когда мы используем поле &lt;code class=&quot;highlighter-rouge&quot;&gt;timediff&lt;/code&gt; как второй параметр сортировки &lt;code class=&quot;highlighter-rouge&quot;&gt;order_by&lt;/code&gt;, то предстоящие события будут возвращены в хронологическом порядке, а прошедшие — в обратном хронологическом порядке.&lt;/p&gt;
+
+&lt;p&gt;Ура! Миссия выполнена, теперь мы можем получить все события в правильном порядке за один запрос в базу данных. К нему может быть применена пагинация, а значит он будет хорошо масштабироваться.&lt;/p&gt;
+
+&lt;p&gt;Эта статья является переводом статьи &lt;strong&gt;Filipe Ximenes&lt;/strong&gt; &lt;a href=&quot;https://www.vinta.com.br/blog/2017/advanced-django-querying-sorting-events-date/&quot;&gt;Advanced Django querying: sorting events by date&lt;/a&gt;. Перевод размещён с разрешения автора.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Git: как сделать push в несколько репозиториев одновременно</title>
