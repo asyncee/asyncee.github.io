@@ -4,7 +4,7 @@
  <title>Asyncee</title>
  <link href="http://asyncee.github.io/atom.xml" rel="self"/>
  <link href="http://asyncee.github.io/"/>
- <updated>2017-03-14T20:10:53+03:00</updated>
+ <updated>2017-04-18T07:13:52+03:00</updated>
  <id>http://asyncee.github.io</id>
  <author>
    <name>Stanislav Lobanov</name>
@@ -730,7 +730,9 @@ UPDATE 1
    <link href="http://asyncee.github.io/2016/04/07/nastrojka-webpack-dlya-raboty-s-react-i-scss/"/>
    <updated>2016-04-07T00:00:00+03:00</updated>
    <id>http://asyncee.github.io/2016/04/07/nastrojka-webpack-dlya-raboty-s-react-i-scss</id>
-   <content type="html">&lt;p&gt;В этой статье я опишу как настроить &lt;a href=&quot;https://webpack.github.io/&quot;&gt;webpack&lt;/a&gt; с поддержкой замечательного фреймворка &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;react&lt;/a&gt; для определения структуры интерфейса и &lt;a href=&quot;http://sass-lang.com/&quot;&gt;sass&lt;/a&gt; для его стилизации.&lt;/p&gt;
+   <content type="html">&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: &lt;em&gt;Друзья, обратите внимание, что с момента публикации прошло больше года, за это время в мире фронтенд разработки произошло большое количество изменений, поэтому данная статья потеряла свою актуальность&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;В этой статье я опишу как настроить &lt;a href=&quot;https://webpack.github.io/&quot;&gt;webpack&lt;/a&gt; с поддержкой замечательного фреймворка &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;react&lt;/a&gt; для определения структуры интерфейса и &lt;a href=&quot;http://sass-lang.com/&quot;&gt;sass&lt;/a&gt; для его стилизации.&lt;/p&gt;
 
 &lt;p&gt;На самом деле эти технологии можно использовать и без webpack, например, встраивать напрямую в код веб-страницы, но с бандлером это делать не только удобнее, но и решение получается более производительным.&lt;/p&gt;
 
