@@ -62,6 +62,7 @@ div.hsidebar, .hsidebar {
   margin-bottom: 0;
 }
 
+/*
 @media (min-width: 48em) {
 div.hsidebar, .hsidebar {
     position: fixed;
@@ -72,6 +73,7 @@ div.hsidebar, .hsidebar {
     width: 18rem;
   }
 }
+*/
 
 /* Sidebar images */
 div.hsidebar img, .hsidebar img {
@@ -120,6 +122,7 @@ a.sidebar-nav-item:focus {
  * contents to the bottom of the sidebar in tablets and up.
  */
 
+/*
 @media (min-width: 48em) {
   .sidebar-sticky {
     position: absolute;
@@ -128,6 +131,7 @@ a.sidebar-nav-item:focus {
     left:   1rem;
   }
 }
+*/
 
 /*
  * Footer
@@ -169,6 +173,7 @@ a.sidebar-nav-item:focus {
   padding-bottom: 4rem;
 }
 
+/*
 @media (min-width: 48em) {
   .content {
     max-width: 38rem;
@@ -183,6 +188,7 @@ a.sidebar-nav-item:focus {
     margin-right: 4rem;
   }
 }
+*/
 
 
 /*

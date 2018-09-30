@@ -549,6 +549,7 @@ div.hsidebar, .hsidebar {
   margin-bottom: 0;
 }
 
+/*
 @media (min-width: 48em) {
 div.hsidebar, .hsidebar {
     position: fixed;
@@ -559,6 +560,7 @@ div.hsidebar, .hsidebar {
     width: 18rem;
   }
 }
+*/
 
 /* Sidebar images */
 div.hsidebar img, .hsidebar img {
@@ -607,6 +609,7 @@ a.sidebar-nav-item:focus {
  * contents to the bottom of the sidebar in tablets and up.
  */
 
+/*
 @media (min-width: 48em) {
   .sidebar-sticky {
     position: absolute;
@@ -615,6 +618,7 @@ a.sidebar-nav-item:focus {
     left:   1rem;
   }
 }
+*/
 
 /*
  * Footer
@@ -656,6 +660,7 @@ a.sidebar-nav-item:focus {
   padding-bottom: 4rem;
 }
 
+/*
 @media (min-width: 48em) {
   .content {
     max-width: 38rem;
@@ -670,6 +675,7 @@ a.sidebar-nav-item:focus {
     margin-right: 4rem;
   }
 }
+*/
 
 
 /*
@@ -916,60 +922,67 @@ pre.code .il, .highlight pre .il { color: #666666 } /* Literal.Number.Integer.Lo
 table.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}
 
 html {
-    font-family: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif;
-}
-
-code, pre{
-    font-family: "Roboto Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-pre {
-    word-break: normal;
-    word-wrap: normal;
-    overflow-x: auto;
-    white-space: pre;
-}
-
-h3 {
-    margin-top: 2.5rem;
-}
-h2, h4, h5, h6 {
-    margin-top: 2rem;
-}
-
-h2, h3, h4, h5, h6 {
-    font-family: 'Roboto', sans;
-    font-weight: 500;
-}
-
-.hsidebar a {
-    font-weight: normal;
-}
-
-.post-title {
-    line-height: 2.2rem;
-    margin-bottom: 20px;
-}
-
-.post-lead {
-    display: block;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: #515151;
-    cursor: pointer;
-}
-
-.post-lead:hover {
-    text-decoration: none;
-}
+  font-family: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif; }
 
 .pagination {
-    font-family: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif;
-}
+  font-family: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif; }
 
-@media (min-width: 48em) {
+code, pre {
+  font-family: "Roboto Mono", Menlo, Monaco, Consolas, "Courier New", monospace; }
+
+pre {
+  word-break: normal;
+  word-wrap: normal;
+  overflow-x: auto;
+  white-space: pre; }
+
+h3 {
+  margin-top: 2.5rem; }
+
+h2, h4, h5, h6 {
+  margin-top: 2rem; }
+
+h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans, serif;
+  font-weight: 500; }
+
+.hsidebar {
+  padding: 1rem !important; }
+  .hsidebar a {
+    font-weight: normal; }
+  @media (max-width: 768px) {
+    .hsidebar .lead {
+      display: none; } }
+
+@media (min-width: 769px) {
+  div.hsidebar, .hsidebar {
+    position: fixed;
+    text-align: left;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 18rem; }
+  .sidebar-sticky {
+    position: absolute;
+    right: 1rem;
+    bottom: 0;
+    left: 1rem; }
   .content {
-    max-width: 40rem;
-  }
-}
+    max-width: 38rem;
+    margin-left: 20rem;
+    margin-right: 2rem; } }
+
+.post-title {
+  line-height: 2.2rem;
+  margin-bottom: 20px; }
+
+.post-lead {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #515151;
+  cursor: pointer; }
+
+.post-lead:hover {
+  text-decoration: none; }
 
