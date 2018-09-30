@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asyncee</title><link>https://asyncee.github.io/</link><description>Stanislav Lobanov</description><atom:link href="https://asyncee.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>ru</language><lastBuildDate>Sun, 30 Sep 2018 13:18:31 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Продвинутые запросы в Django: сортировка событий по дате</title><link>https://asyncee.github.io/posts/advanced-django-querying-sorting-events-by-date/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;Представьте ситуацию, в которой в нашем приложении были бы события (запланированные задачи, встречи, Python−конференции по всему миру), происходящие в разные моменты времени. Мы хотели бы отображать их пользователю в виде простого списка. Учитывая, что мы в Феврале 2017 года, какой способ сортировки событий был бы лучшим с точки зрения пользователя?&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asyncee</title><link>https://asyncee.github.io/</link><description>Stanislav Lobanov</description><atom:link href="https://asyncee.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>ru</language><lastBuildDate>Sun, 30 Sep 2018 14:04:25 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Блог переехал на Nikola</title><link>https://asyncee.github.io/posts/moved-to-nikola/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;Всем привет!&lt;/p&gt;
+&lt;p&gt;Наконец-то блог переехал на Nikola, генератор сайтов на Python.&lt;/p&gt;
+&lt;p&gt;Год назад у меня полностью сменилось рабочее окружение, переехал на Mac.
+Ставить руби не хотелось, да и заново вспоминать и разбираться с Jekyll
+в общем-то тоже, поэтому никак не мог собраться снова начать писать,
+хотя идей было море.&lt;/p&gt;
+&lt;p&gt;Рад, что выдалось несколько свободных часов и я всё-таки взял себя в руки
+и мигрировал блог. Скажу откровенно — Nikola меня поразил. Я вообще расчитывал,
+что миграция займёт неделю, если этим заниматься по вечерам. Однако,
+как оказалось, у него очень большие возможности, поддержка плагинов,
+сторонних тем, богатый command-line инструментарий. А самое главное — мои
+старые посты в Markdown формате он съел практически в оригинальном виде.&lt;/p&gt;
+&lt;p&gt;После миграции постов, я настроил редиректы со старых адресов,
+установил тему Hyde, немного допилил её напильником и, вуаля — всё готово!&lt;/p&gt;
+&lt;p&gt;Отдельно порадовало то, что для настройки деплоя на Github не понадобилось
+вообще ничего настраивать.&lt;/p&gt;
+&lt;p&gt;Как обычно, оставляю ссылку: &lt;a href="https://getnikola.com"&gt;https://getnikola.com&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/moved-to-nikola/</guid><pubDate>Sun, 30 Sep 2018 13:52:00 GMT</pubDate></item><item><title>Продвинутые запросы в Django: сортировка событий по дате</title><link>https://asyncee.github.io/posts/advanced-django-querying-sorting-events-by-date/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;Представьте ситуацию, в которой в нашем приложении были бы события (запланированные задачи, встречи, Python−конференции по всему миру), происходящие в разные моменты времени. Мы хотели бы отображать их пользователю в виде простого списка. Учитывая, что мы в Феврале 2017 года, какой способ сортировки событий был бы лучшим с точки зрения пользователя?&lt;/p&gt;
 &lt;p&gt;&lt;img alt="хронологический порядок событий" src="https://asyncee.github.io/public/posts/advanced-django-querying/chronological.png"&gt;&lt;/p&gt;
 &lt;p&gt;Чтобы было проще ответить, мы можем немного изменить вопрос: какое событие из списка было бы наиболее значимо для пользователя? Я полагаю, что хороший ответ — ближайшее предстоящее мероприятие &lt;strong&gt;DjangoCon Europe&lt;/strong&gt;. Круто, покажем его первым. Какое событие второе по значимости? Ну, учитывая, что &lt;strong&gt;PyCamp Argentina&lt;/strong&gt; и &lt;strong&gt;PyCon Brasil&lt;/strong&gt; давно прошли, то хорошим выбором была бы конференция &lt;strong&gt;PyCon US&lt;/strong&gt;. У нас осталось два прошедших события, какое из них должно идти следующим? По моему личному мнению, самые недавние события должны быть первыми, чем старее событие, тем оно менее важно. Итак, вот какой порядок мы придумали в итоге:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="лучший порядок событий" src="https://asyncee.github.io/public/posts/advanced-django-querying/best.png"&gt;&lt;/p&gt;
@@ -486,144 +502,4 @@ UPDATE &lt;span class="m"&gt;1&lt;/span&gt;
 
 
 &lt;p&gt;Как видно, для работы компонентов необходимо код размещать внутри тегов &lt;code&gt;script&lt;/code&gt; с атрибутом &lt;code&gt;type="text/babel"&lt;/code&gt;. Содержимое тегов конкатенируется, преобразуется в ES5 и исполняется.&lt;/p&gt;
-&lt;p&gt;Вот так всё просто.&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/</guid><pubDate>Tue, 12 Apr 2016 20:00:00 GMT</pubDate></item><item><title>Настройка webpack для работы с react и sass</title><link>https://asyncee.github.io/posts/nastrojka-webpack-dlya-raboty-s-react-i-scss/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: &lt;em&gt;Друзья, обратите внимание, что с момента публикации прошло больше года, за это время в мире фронтенд разработки произошло большое количество изменений, поэтому данная статья потеряла свою актуальность&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;В этой статье я опишу как настроить &lt;a href="https://webpack.github.io/"&gt;webpack&lt;/a&gt; с поддержкой замечательного фреймворка &lt;a href="https://facebook.github.io/react/"&gt;react&lt;/a&gt; для определения структуры интерфейса и &lt;a href="http://sass-lang.com/"&gt;sass&lt;/a&gt; для его стилизации.&lt;/p&gt;
-&lt;p&gt;На самом деле эти технологии можно использовать и без webpack, например, встраивать напрямую в код веб-страницы, но с бандлером это делать не только удобнее, но и решение получается более производительным.&lt;/p&gt;
-&lt;p&gt;Сразу оговорюсь, что я всё-таки больше backend developer, поэтому статья может содержать неточности, однако весь мой опыт изложенный ниже был неоднократно подтверждён на практике.&lt;/p&gt;
-&lt;p&gt;Итак, поехали!&lt;/p&gt;
-&lt;h3&gt;Установка&lt;/h3&gt;
-&lt;p&gt;Для работы конфига необходимы следующие библиотеки:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;npm install -g webpack
-npm install --save-dev webpack
-&lt;/pre&gt;
-
-
-&lt;p&gt;Сам &lt;strong&gt;webpack&lt;/strong&gt;. Устанавливать его следует глобально — в систему и локально — в проект. Глобальная установка даст возможность использовать команду &lt;code&gt;webpack&lt;/code&gt;, а локальная — использовать его как библиотеку.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react babel-preset-stage-0 babel-preset-stage-1
-&lt;/pre&gt;
-
-
-&lt;p&gt;Прежде всего, &lt;strong&gt;babel&lt;/strong&gt; с набором плагинов, объединённых в &lt;em&gt;пресеты&lt;/em&gt;, внедряющих поддержку стандарта &lt;a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"&gt;ES2015&lt;/a&gt;, react−а с его &lt;a href="https://facebook.github.io/react/docs/jsx-in-depth.html"&gt;JSX&lt;/a&gt; и разных фич ES6/7.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;npm install --save-dev css-loader style-loader sass-loader resolve-url-loader extract-text-webpack-plugin
-&lt;/pre&gt;
-
-
-&lt;p&gt;Загрузчики, реализующие поддержку файлов со стилями и плагин для сохранения извлечённых стилей в отдельный файл.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;npm install --save-dev react react-dom bootstrap-sass
-&lt;/pre&gt;
-
-
-&lt;p&gt;И оставшиеся react и scss-версия bootstrap.&lt;/p&gt;
-&lt;h3&gt;Структура проекта&lt;/h3&gt;
-&lt;p&gt;Привожу структуру проекта, в данном случае — для простого одностраничного приложения. Структура вашего проекта может разительно отличаться, но для целей демонстрации она подходит очень хорошо.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;├── index.html
-├── package.json
-├── webpack.config.js
-└── static
-    ├── build
-    │   ├── bundle.js
-    │   └── styles.css
-    ├── app.js
-    └── main.scss
-&lt;/pre&gt;
-
-
-&lt;h3&gt;Настройка&lt;/h3&gt;
-&lt;p&gt;Сначала конфиг — потом пояснения.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;webpack&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'webpack'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="nx"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'path'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;ExtractTextPlugin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'extract-text-webpack-plugin'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-&lt;span class="nx"&gt;webpackConfig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nx"&gt;context&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;__dirname&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="nx"&gt;entry&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="nx"&gt;bundle&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'./static/app.js'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="nx"&gt;styles&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'./static/main.scss'&lt;/span&gt;
-    &lt;span class="p"&gt;},&lt;/span&gt;
-    &lt;span class="nx"&gt;output&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="nx"&gt;filename&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'[name].js'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'./static/build'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="nx"&gt;library&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'[name]'&lt;/span&gt;
-    &lt;span class="p"&gt;},&lt;/span&gt;
-    &lt;span class="nx"&gt;resolve&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="nx"&gt;extensions&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'.js'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'.jsx'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="p"&gt;},&lt;/span&gt;
-    &lt;span class="nx"&gt;devtool&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'#cheap-module-source-map'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="nx"&gt;loaders&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-            &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="sr"&gt;/\.jsx?$/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="nx"&gt;exclude&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="sr"&gt;/node_modules/&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
-                &lt;span class="nx"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"babel-loader"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="nx"&gt;query&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-                    &lt;span class="nx"&gt;presets&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'es2015'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'react'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'stage-0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'stage-1'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-                &lt;span class="p"&gt;}&lt;/span&gt;
-            &lt;span class="p"&gt;},&lt;/span&gt;
-            &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="sr"&gt;/\.scss$/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="nx"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'style-loader'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'css-loader!resolve-url!sass-loader?sourceMap'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="p"&gt;},&lt;/span&gt;
-            &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="sr"&gt;/\.css$/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="nx"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'style-loader'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'css-loader'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="p"&gt;},&lt;/span&gt;
-            &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="sr"&gt;/\.woff2?$|\.ttf$|\.eot$|\.svg$|\.png|\.jpe?g|\.gif$/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="nx"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'file-loader'&lt;/span&gt;
-            &lt;span class="p"&gt;}&lt;/span&gt;
-        &lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="p"&gt;},&lt;/span&gt;
-    &lt;span class="nx"&gt;plugins&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-        &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'styles.css'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="nx"&gt;allChunks&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
-        &lt;span class="p"&gt;})&lt;/span&gt;
-    &lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="p"&gt;};&lt;/span&gt;
-&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;webpackConfig&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Исходных файлов два — &lt;code&gt;static/app.js&lt;/code&gt; и &lt;code&gt;static/main.scss&lt;/code&gt;. После запуска команды &lt;code&gt;webpack&lt;/code&gt; произойдёт загрузка данных из них с помощью определённых в конфиге загрузчиков.&lt;/p&gt;
-&lt;p&gt;Файлы с расширениями &lt;em&gt;.js&lt;/em&gt; и &lt;em&gt;.jsx&lt;/em&gt; будут обработаны &lt;strong&gt;babel&lt;/strong&gt;−ом:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;jsx-синтаксис react−а будет преобразован в обычный яваскрипт&lt;/li&gt;
-&lt;li&gt;es6/7 синтаксис будет преобразован в es5&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Для обработки &lt;em&gt;scss&lt;/em&gt;−стилей используется набор лоадеров, в том числе &lt;strong&gt;sass-loader&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="sr"&gt;/\.scss$/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="nx"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'style-loader'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'css-loader!resolve-url!sass-loader?sourceMap'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Здесь мы указываем, что все &lt;em&gt;.scss&lt;/em&gt; файлы будут обработаны сначала &lt;strong&gt;sass-loader&lt;/strong&gt;, который на выходе сгенерирует обычный css. Затем в дело вступает &lt;strong&gt;resolve-url-loader&lt;/strong&gt;, задача которого найти относительные пути к файлам в css (например, в директиве &lt;code&gt;url(../image.jpg)&lt;/code&gt;) и преобразовать их в абсолютные (для этого обязательно нужно включить source-map в предыдущем загрузчике). Результат передаётся в &lt;strong&gt;css-loader&lt;/strong&gt;, который непосредственно отвечает за поддержку css в webpack. В случае, если что-то пошло не так, использоваться будет &lt;strong&gt;style-loader&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Так, с загрузчиками понятно, а что такое &lt;code&gt;ExtractTextPlugin&lt;/code&gt;? Ответ — это плагин, который сохраняет полученный от загрузчиков текст (исходный код) в отдельные чанки.&lt;/p&gt;
-&lt;p&gt;А дальше можно сохранить текст из этих чанков в отдельный файл, в данном случае &lt;em&gt;styles.css&lt;/em&gt;:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'styles.css'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nx"&gt;allChunks&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
-&lt;span class="p"&gt;}),&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Опция &lt;code&gt;allChunks: true&lt;/code&gt; указывает, что нужно все чанки склеить и сохранить в один файл, иначе они будут сохранены в отдельные файлы.&lt;/p&gt;
-&lt;p&gt;После обработки, вебпак сгенерирует выходные файлы в директории &lt;code&gt;./static/build/&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;link&lt;/span&gt; &lt;span class="na"&gt;rel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"/static/build/styles.css"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text/javascript"&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"/static/build/bundle.js"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;В целом данная конфигурация подходит для разработки простых одностраничных приложений. На выходе получается несколько файлов со скриптами и стилями, которые можно подключить на страницу.&lt;/p&gt;
-&lt;p&gt;После загрузки бандла, его исходный код будет прочитан и исполнен интерпретатором javascript. Также, благодаря опции &lt;code&gt;output.library&lt;/code&gt; &lt;strong&gt;webpack&lt;/strong&gt; экспортирует загруженный модуль в переменную с названием секции в &lt;code&gt;entry&lt;/code&gt;, в данном случае — &lt;code&gt;bundle&lt;/code&gt;. Это очень удобно, так как ваш модуль подключается как библиотека и становится доступен в глобальной области видимости:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="c1"&gt;// sayHello — функция, определённая в файле app.js&lt;/span&gt;
-&lt;span class="nx"&gt;bundle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;sayHello&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="c1"&gt;// или&lt;/span&gt;
-&lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;bundle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;sayHello&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Стоит учесть, что webpack может генерировать бандлы, которые при загрузке автоматически подключат нужные стили на страницу, это реализуется с помощью &lt;strong&gt;style-loader&lt;/strong&gt; и особенно удобно при разработке приложений с большим числом страниц или react-компонентов.&lt;/p&gt;
-&lt;p&gt;На этом всё. Удачного кодинга!&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/nastrojka-webpack-dlya-raboty-s-react-i-scss/</guid><pubDate>Thu, 07 Apr 2016 20:00:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;Вот так всё просто.&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/</guid><pubDate>Tue, 12 Apr 2016 20:00:00 GMT</pubDate></item></channel></rss>

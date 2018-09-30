@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://asyncee.github.io/</loc>
-  <lastmod>2018-09-30T13:17:00Z</lastmod>
+  <lastmod>2018-09-30T14:02:00Z</lastmod>
  </url>
  <url>
   <loc>https://asyncee.github.io/2016/</loc>
@@ -82,8 +82,12 @@
   <lastmod>2018-09-30T09:20:00Z</lastmod>
  </url>
  <url>
+  <loc>https://asyncee.github.io/2018/</loc>
+  <lastmod>2018-09-30T14:02:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://asyncee.github.io/archive.html</loc>
-  <lastmod>2018-09-30T13:33:00Z</lastmod>
+  <lastmod>2018-09-30T14:02:00Z</lastmod>
  </url>
  <url>
   <loc>https://asyncee.github.io/categories/</loc>
@@ -91,7 +95,7 @@
  </url>
  <url>
   <loc>https://asyncee.github.io/index-1.html</loc>
-  <lastmod>2018-09-30T13:33:00Z</lastmod>
+  <lastmod>2018-09-30T14:02:00Z</lastmod>
  </url>
  <url>
   <loc>https://asyncee.github.io/posts/advanced-django-querying-sorting-events-by-date/</loc>
@@ -124,6 +128,10 @@
  <url>
   <loc>https://asyncee.github.io/posts/kak-zagruzit-i-sohranit-fajl-iz-interneta-v-pole-modeli-django/</loc>
   <lastmod>2018-09-30T08:48:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://asyncee.github.io/posts/moved-to-nikola/</loc>
+  <lastmod>2018-09-30T14:02:00Z</lastmod>
  </url>
  <url>
   <loc>https://asyncee.github.io/posts/moving-to-jekyll/</loc>
