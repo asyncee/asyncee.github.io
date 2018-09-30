@@ -13,3 +13,6 @@ clean:
 
 serve:
 	env/bin/nikola auto --browser
+
+deploy:
+	env/bin/nikola github_deploy
