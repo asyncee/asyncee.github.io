@@ -1,0 +1,11 @@
+[Core]
+Name = nikola_libsass
+Module = nikola_libsass
+
+[Nikola]
+PluginCategory = Task
+
+[Documentation]
+Author = Stanislav Lobanov
+Version = 0.1
+Description = Build CSS out of Sass sources using libsass

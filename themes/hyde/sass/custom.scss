@@ -1,0 +1,91 @@
+@import "include-media";
+
+$font: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif;
+$monispace: "Roboto Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+
+html {
+  font-family: $font;
+}
+
+.pagination {
+  font-family: $font;
+}
+
+code, pre {
+  font-family: $monispace;
+}
+
+pre {
+  word-break: normal;
+  word-wrap: normal;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+h3 {
+  margin-top: 2.5rem;
+}
+
+h2, h4, h5, h6 {
+  margin-top: 2rem;
+}
+
+h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans, serif;
+  font-weight: 500;
+}
+
+.hsidebar {
+  padding: 1rem !important;
+
+  & a {
+    font-weight: normal;
+  }
+
+  @include  media("<=tablet") {
+    .lead {
+      display: none;
+    }
+  }
+}
+
+@include media(">tablet") {
+  div.hsidebar, .hsidebar {
+    position: fixed;
+    text-align: left;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 18rem;
+  }
+
+  .sidebar-sticky {
+    position: absolute;
+    right:  1rem;
+    bottom: 0;
+    left:   1rem;
+  }
+
+  .content {
+    max-width: 38rem;
+    margin-left: 20rem;
+    margin-right: 2rem;
+  }
+}
+
+.post-title {
+  line-height: 2.2rem;
+  margin-bottom: 20px;
+}
+
+.post-lead {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #515151;
+  cursor: pointer;
+}
+
+.post-lead:hover {
+  text-decoration: none;
+}
