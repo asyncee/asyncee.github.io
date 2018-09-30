@@ -1,0 +1,50 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base with context %}
+{% import 'base_header.tmpl' as header with context %}
+{% import 'base_footer.tmpl' as footer with context %}
+{% import 'includes/yandex_metrika.tmpl' as metrika with context %}
+{{ set_locale(lang) }}
+{{ base.html_headstart() }}
+
+<meta name='yandex-verification' content='4db6105a4cf78b07' />
+
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Lora:400,400i,700|Roboto:500|Roboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+
+{% block extra_head %}
+{#  Leave this block alone. #}
+{% endblock %}
+{{ template_hooks['extra_head']() }}
+</head>
+<body class="{{ hyde_subtheme }}">
+    <a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="{{ abs_link(_link("root", None, lang)) }}">
+                  {{ header.html_site_title() }}
+                </a>
+              </h1>
+            {{ header.html_site_description() }}
+            </div>
+            {{ header.html_navigation_links() }}
+            {{ footer.html_footer() }}
+        </div>
+    </div>
+
+    <div class="content container" id="content">
+       {% block content %}{% endblock %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+    {{ metrika.counter() }}
+    <script src="/public/js/main.js"></script>
+    <script async src="/public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+
+    {{ body_end }}
+    {{ template_hooks['body_end']() }}
+    {{ base.late_load_js() }}
+
+</body>
+</html>
