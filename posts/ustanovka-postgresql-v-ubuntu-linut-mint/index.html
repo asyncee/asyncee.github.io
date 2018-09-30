@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Как поставить postgres с поддержкой кодировки UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Установка postgresql в Ubuntu / Linux Mint </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/ustanovka-postgresql-v-ubuntu-linut-mint/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/" title="Шаблон для прототипирования компонентов на reactjs в браузере" type="text/html">
+<link rel="next" href="../kak-zagruzit-i-sohranit-fajl-iz-interneta-v-pole-modeli-django/" title="Как сохранить файл, доступный по ссылке в поле модели Django" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Установка postgresql в Ubuntu / Linux Mint">
+<meta property="og:description" content="Как поставить postgres с поддержкой кодировки UTF-8">
+<meta property="og:url" content="https://asyncee.github.io/posts/ustanovka-postgresql-v-ubuntu-linut-mint/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-04-17T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Установка postgresql в Ubuntu / Linux Mint</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-04-17T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 17 апреля 2016">Опубликовано 17 апреля 2016</time></span>
+        <meta name="description" itemprop="description" content="Как поставить postgres с поддержкой кодировки UTF-8">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Во всех моих проектах используется <strong>Postgresql</strong> и каждый раз, когда необходимо её установить на чистую машину, приходится восстанавливать процесс установки.</p>
+<p>Чтобы эту проблему решить, документирую процесс здесь.</p>
+<h3>Установка</h3>
+<p>На данный момент я предпочитаю устанавливать самую свежую стабильную версию postgres из официального репозитория:</p>
+<pre class="code literal-block"><span></span>$ sudo sh -c <span class="s1">'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" &gt;&gt; /etc/apt/sources.list.d/pgdg.list'</span>
+$ wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - <span class="p">|</span> sudo apt-key add -
+</pre>
+
+
+<p>Перед установкой я рекомендую выставить локаль <code>ru_RU.UTF-8</code>.</p>
+<pre class="code literal-block"><span></span><span class="nb">export</span> <span class="nv">LC_ALL</span><span class="o">=</span>ru_RU.UTF-8
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+</pre>
+
+
+<h3>Пересоздание кластера</h3>
+<p>Для того, чтобы решить проблемы с упорядочиванием и фильтрацией кириллических строк, необходимо пересоздать кластер БД сразу после установки с корректными значениями локали и кодировки:</p>
+<p><strong>ВНИМАНИЕ!</strong> Приведённые ниже команды полностью удалят ваш текущий кластер со всеми данными:</p>
+<pre class="code literal-block"><span></span>pg_dropcluster <span class="m">9</span>.5 main --stop
+pg_createcluster --locale<span class="o">=</span>ru_RU.UTF-8 --encoding<span class="o">=</span>UTF-8 --start <span class="m">9</span>.5 main
+</pre>
+
+
+<p>В данных командах версия <strong>postgresql</strong> — <code>9.5</code>, название кластера — <code>main</code>. Готово, можно работать.</p>
+<h3>Альтернатива</h3>
+<p>В качестве альтернативы пересозданию кластера, можно вручную изменить кодировку шаблона <code>template0</code>. Это будет работать только для новых баз данных.</p>
+<pre class="code literal-block"><span></span><span class="c1"># psql -U postgres</span>
+
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># update pg_database set datallowconn = TRUE where datname = 'template0';</span>
+UPDATE <span class="m">1</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># \c template0</span>
+You are now connected to database <span class="s2">"template0"</span>.
+<span class="nv">template0</span><span class="o">=</span><span class="c1"># update pg_database set datistemplate = FALSE where datname = 'template1';</span>
+UPDATE <span class="m">1</span>
+<span class="nv">template0</span><span class="o">=</span><span class="c1"># drop database template1;</span>
+DROP DATABASE
+<span class="nv">template0</span><span class="o">=</span><span class="c1"># create database template1 with template = template0 encoding = 'UTF8';</span>
+CREATE DATABASE
+<span class="nv">template0</span><span class="o">=</span><span class="c1"># update pg_database set datistemplate = TRUE where datname = 'template1';</span>
+UPDATE <span class="m">1</span>
+<span class="nv">template0</span><span class="o">=</span><span class="c1"># \c template1</span>
+You are now connected to database <span class="s2">"template1"</span>.
+<span class="nv">template1</span><span class="o">=</span><span class="c1"># update pg_database set datallowconn = FALSE where datname = 'template0';</span>
+UPDATE <span class="m">1</span>
+</pre>
+
+
+<p>Скрипт взят <a href="https://gist.github.com/ffmike/877447">отсюда</a>.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

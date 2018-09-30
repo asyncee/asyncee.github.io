@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Или как избавиться от html-разметки в статичных блоках">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Вспомогательные объекты для верстальщика в Django </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/vspomogatelnye-obuekty-dlya-verstalshika-v-django/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../ustanovka-tipografskoj-raskladki-ili-birmana-v-linux-mint-173/" title="Установка типографской раскладки Ильи Бирмана в Linux Mint 17.3" type="text/html">
+<link rel="next" href="../poluchenie-pervogo-elementa-spiska/" title="Получение первого элемента списка в Python" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Вспомогательные объекты для верстальщика в Django">
+<meta property="og:description" content="Или как избавиться от html-разметки в статичных блоках">
+<meta property="og:url" content="https://asyncee.github.io/posts/vspomogatelnye-obuekty-dlya-verstalshika-v-django/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-03-11T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Вспомогательные объекты для верстальщика в Django</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-03-11T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 11 марта 2016">Опубликовано 11 марта 2016</time></span>
+        <meta name="description" itemprop="description" content="Или как избавиться от html-разметки в статичных блоках">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Сегодня возникла задача — реализовать возможность добавления выпадающих меню в произвольное место на сайте.</p>
+<p>Структура веб-сайта может содержать разнообразные элементы, которые могут отображаться динамически, получая данные как из базы, так и вручную, посредством написания html/css кода в нужном месте. Например, это удобно в случае, когда в каком-то месте сайта должен стоять один или несколько произвольных блоков, параметры которых определяются из вне системы (например, заказчиком). Примерами могут служить стилизованная ссылка, ведущая на сайт клиента, текст или элементы в футере, счётчики.</p>
+<p>Такие задачи нам помогает решать приложение  <a href="https://github.com/asyncee/django-cmstemplates/">django-cmstemplates</a>, которое позволяет динамически создавать нужные блоки в определённых частях сайта, а самое главное - их можно редактировать прямо из админки, используя синтаксис шаблонов Django.</p>
+<p>Так вот, возвращаясь к задаче — необходимо реализовать меню с выпадающим списком. Проблему эту можно решить десятком способов, но мне хотелось избавиться от дублирования одной и той же разметки в разных блоках.</p>
+<p>Для этого я написал вот такой вспомогательный класс, описывающий выпадающее меню:</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">render_to_string</span>
+
+
+<span class="k">class</span> <span class="nc">DropdownMenu</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'name'</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">'url'</span><span class="p">:</span> <span class="n">url</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render_to_string</span><span class="p">(</span><span class="s1">'blocks/dropdown_menu.html'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'menu'</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</pre>
+
+
+<p>Я думаю, что код здесь максимально понятный, и говорит сам за себя даже без докстрингов. <code>DropdownMenu</code> — всего лишь вспомогательный класс, призванный хранить состояние описываемой сущности.</p>
+<p>Объекты класса рендерят себя, используя такой шаблон:</p>
+<pre class="code literal-block"><span></span><span class="x">&lt;div class="drop-down-menu"&gt;</span>
+<span class="x">    &lt;div id="</span><span class="cp">{{</span> <span class="nv">menu.id</span> <span class="cp">}}</span><span class="x">" class="drop-down-menu__link"&gt;</span>
+<span class="x">        </span><span class="cp">{{</span> <span class="nv">menu.title</span> <span class="cp">}}</span><span class="x"> &lt;span class="caret"&gt;&lt;/span&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">    &lt;ul class="drop-down-menu__items"&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">link</span> <span class="k">in</span> <span class="nv">menu</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;li&gt;</span>
+<span class="x">                &lt;a href="</span><span class="cp">{{</span> <span class="nv">link.url</span> <span class="cp">}}</span><span class="x">"&gt;</span><span class="cp">{{</span> <span class="nv">link.name</span> <span class="cp">}}</span><span class="x">&lt;/a&gt;</span>
+<span class="x">            &lt;/li&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;/ul&gt;</span>
+<span class="x">&lt;/div&gt;</span>
+</pre>
+
+
+<p>Выглядит это следующим образом:</p>
+<p><img alt="выпадающее меню" src="../../public/posts/dropdown_menu.png"></p>
+<p>Создание и изменение меню реализовано с помощью шаблонных тегов:</p>
+<pre class="code literal-block"><span></span><span class="c1"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">template</span>
+
+<span class="kn">from</span> <span class="nn">core.templatetags.dropdown</span> <span class="kn">import</span> <span class="n">DropdownMenu</span>
+
+<span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
+
+
+<span class="nd">@register.simple_tag</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">dropdown_menu</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
+    <span class="n">menu</span> <span class="o">=</span> <span class="n">DropdownMenu</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">menu</span>
+
+
+<span class="nd">@register.simple_tag</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">add_link</span><span class="p">(</span><span class="n">menu</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="n">menu</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">''</span>
+</pre>
+
+
+<p>Для вывода меню нужно добавить в шаблон следующее:</p>
+<p>{% raw %}</p>
+<pre class="code literal-block"><span></span><span class="cp">{%</span> <span class="k">dropdown_menu</span> <span class="s1">'Поисковая система'</span> <span class="k">as</span> <span class="nv">menu</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">add_link</span> <span class="nv">menu</span> <span class="s1">'Yandex'</span> <span class="s1">'http://yandex.ru'</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">add_link</span> <span class="nv">menu</span> <span class="s1">'Google'</span> <span class="s1">'http://google.com'</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">add_link</span> <span class="nv">menu</span> <span class="s1">'Bing'</span> <span class="s1">'http://bing.com'</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="c">{# Вот так меню рендерится в html #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">menu</span> <span class="cp">}}</span><span class="x"></span>
+</pre>
+
+
+<p>{% endraw %}</p>
+<p>В целом получилось достаточно просто, а главное теперь удобно работать с меню из шаблонов, и автоматически мы следуем принципу DRY - Dont Repeat Yourself.</p>
+<p>Данный пример лишь иллюстрирует возможности подхода и не ограничивается только на создании меню. Такой подход можно использовать для любых других элементов интерфейса.
+Хотя приведённый пример на сто процентов решает нашу задачу, реализацию можно улучшить, например, написать шаблонный тег, реализующий более удобный синтаксис:</p>
+<p>{% raw %}</p>
+<pre class="code literal-block"><span></span><span class="cp">{%</span> <span class="k">menu</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">link</span> <span class="s1">'Yandex'</span> <span class="s1">'http://yandex.ru'</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">link</span> <span class="nv">google_variable</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">endmenu</span>
+</pre>
+
+
+<p>{% endraw %}</p>
+<p>На этом всё. Удачи!</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

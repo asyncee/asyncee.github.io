@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Или вебпак для начинающих хипстеров">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Настройка webpack для работы с react и sass </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/nastrojka-webpack-dlya-raboty-s-react-i-scss/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../ustanovka-kitematic-v-linux/" title="Установка Kitematic в Linux" type="text/html">
+<link rel="next" href="../shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/" title="Шаблон для прототипирования компонентов на reactjs в браузере" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Настройка webpack для работы с react и sass">
+<meta property="og:description" content="Или вебпак для начинающих хипстеров">
+<meta property="og:url" content="https://asyncee.github.io/posts/nastrojka-webpack-dlya-raboty-s-react-i-scss/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-04-07T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Настройка webpack для работы с react и sass</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-04-07T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 07 апреля 2016">Опубликовано 07 апреля 2016</time></span>
+        <meta name="description" itemprop="description" content="Или вебпак для начинающих хипстеров">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p><strong>NOTE</strong>: <em>Друзья, обратите внимание, что с момента публикации прошло больше года, за это время в мире фронтенд разработки произошло большое количество изменений, поэтому данная статья потеряла свою актуальность</em>.</p>
+<p>В этой статье я опишу как настроить <a href="https://webpack.github.io/">webpack</a> с поддержкой замечательного фреймворка <a href="https://facebook.github.io/react/">react</a> для определения структуры интерфейса и <a href="http://sass-lang.com/">sass</a> для его стилизации.</p>
+<p>На самом деле эти технологии можно использовать и без webpack, например, встраивать напрямую в код веб-страницы, но с бандлером это делать не только удобнее, но и решение получается более производительным.</p>
+<p>Сразу оговорюсь, что я всё-таки больше backend developer, поэтому статья может содержать неточности, однако весь мой опыт изложенный ниже был неоднократно подтверждён на практике.</p>
+<p>Итак, поехали!</p>
+<h3>Установка</h3>
+<p>Для работы конфига необходимы следующие библиотеки:</p>
+<pre class="code literal-block"><span></span>npm install -g webpack
+npm install --save-dev webpack
+</pre>
+
+
+<p>Сам <strong>webpack</strong>. Устанавливать его следует глобально — в систему и локально — в проект. Глобальная установка даст возможность использовать команду <code>webpack</code>, а локальная — использовать его как библиотеку.</p>
+<pre class="code literal-block"><span></span>npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react babel-preset-stage-0 babel-preset-stage-1
+</pre>
+
+
+<p>Прежде всего, <strong>babel</strong> с набором плагинов, объединённых в <em>пресеты</em>, внедряющих поддержку стандарта <a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">ES2015</a>, react−а с его <a href="https://facebook.github.io/react/docs/jsx-in-depth.html">JSX</a> и разных фич ES6/7.</p>
+<pre class="code literal-block"><span></span>npm install --save-dev css-loader style-loader sass-loader resolve-url-loader extract-text-webpack-plugin
+</pre>
+
+
+<p>Загрузчики, реализующие поддержку файлов со стилями и плагин для сохранения извлечённых стилей в отдельный файл.</p>
+<pre class="code literal-block"><span></span>npm install --save-dev react react-dom bootstrap-sass
+</pre>
+
+
+<p>И оставшиеся react и scss-версия bootstrap.</p>
+<h3>Структура проекта</h3>
+<p>Привожу структуру проекта, в данном случае — для простого одностраничного приложения. Структура вашего проекта может разительно отличаться, но для целей демонстрации она подходит очень хорошо.</p>
+<pre class="code literal-block"><span></span>├── index.html
+├── package.json
+├── webpack.config.js
+└── static
+    ├── build
+    │   ├── bundle.js
+    │   └── styles.css
+    ├── app.js
+    └── main.scss
+</pre>
+
+
+<h3>Настройка</h3>
+<p>Сначала конфиг — потом пояснения.</p>
+<pre class="code literal-block"><span></span><span class="nx">webpack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'webpack'</span><span class="p">);</span>
+<span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'path'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ExtractTextPlugin</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'extract-text-webpack-plugin'</span><span class="p">);</span>
+
+
+<span class="nx">webpackConfig</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">context</span><span class="o">:</span> <span class="nx">__dirname</span><span class="p">,</span>
+    <span class="nx">entry</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">bundle</span><span class="o">:</span> <span class="s1">'./static/app.js'</span><span class="p">,</span>
+        <span class="nx">styles</span><span class="o">:</span> <span class="s1">'./static/main.scss'</span>
+    <span class="p">},</span>
+    <span class="nx">output</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">filename</span><span class="o">:</span> <span class="s1">'[name].js'</span><span class="p">,</span>
+        <span class="nx">path</span><span class="o">:</span> <span class="s1">'./static/build'</span><span class="p">,</span>
+        <span class="nx">library</span><span class="o">:</span> <span class="s1">'[name]'</span>
+    <span class="p">},</span>
+    <span class="nx">resolve</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s1">''</span><span class="p">,</span> <span class="s1">'.js'</span><span class="p">,</span> <span class="s1">'.jsx'</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nx">devtool</span><span class="o">:</span> <span class="s1">'#cheap-module-source-map'</span><span class="p">,</span>
+    <span class="nx">module</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">loaders</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.jsx?$/</span><span class="p">,</span>
+                <span class="nx">exclude</span><span class="o">:</span> <span class="p">[</span><span class="sr">/node_modules/</span><span class="p">],</span>
+                <span class="nx">loader</span><span class="o">:</span> <span class="s2">"babel-loader"</span><span class="p">,</span>
+                <span class="nx">query</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="nx">presets</span><span class="o">:</span> <span class="p">[</span><span class="s1">'es2015'</span><span class="p">,</span> <span class="s1">'react'</span><span class="p">,</span> <span class="s1">'stage-0'</span><span class="p">,</span> <span class="s1">'stage-1'</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.scss$/</span><span class="p">,</span>
+                <span class="nx">loader</span><span class="o">:</span> <span class="nx">ExtractTextPlugin</span><span class="p">.</span><span class="nx">extract</span><span class="p">(</span><span class="s1">'style-loader'</span><span class="p">,</span> <span class="s1">'css-loader!resolve-url!sass-loader?sourceMap'</span><span class="p">)</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.css$/</span><span class="p">,</span>
+                <span class="nx">loader</span><span class="o">:</span> <span class="nx">ExtractTextPlugin</span><span class="p">.</span><span class="nx">extract</span><span class="p">(</span><span class="s1">'style-loader'</span><span class="p">,</span> <span class="s1">'css-loader'</span><span class="p">)</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.woff2?$|\.ttf$|\.eot$|\.svg$|\.png|\.jpe?g|\.gif$/</span><span class="p">,</span>
+                <span class="nx">loader</span><span class="o">:</span> <span class="s1">'file-loader'</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span>
+        <span class="k">new</span> <span class="nx">ExtractTextPlugin</span><span class="p">(</span><span class="s1">'styles.css'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">allChunks</span><span class="o">:</span> <span class="kc">true</span>
+        <span class="p">})</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">webpackConfig</span><span class="p">;</span>
+</pre>
+
+
+<p>Исходных файлов два — <code>static/app.js</code> и <code>static/main.scss</code>. После запуска команды <code>webpack</code> произойдёт загрузка данных из них с помощью определённых в конфиге загрузчиков.</p>
+<p>Файлы с расширениями <em>.js</em> и <em>.jsx</em> будут обработаны <strong>babel</strong>−ом:</p>
+<ul>
+<li>jsx-синтаксис react−а будет преобразован в обычный яваскрипт</li>
+<li>es6/7 синтаксис будет преобразован в es5</li>
+</ul>
+<p>Для обработки <em>scss</em>−стилей используется набор лоадеров, в том числе <strong>sass-loader</strong>:</p>
+<pre class="code literal-block"><span></span><span class="p">{</span>
+    <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.scss$/</span><span class="p">,</span>
+    <span class="nx">loader</span><span class="o">:</span> <span class="nx">ExtractTextPlugin</span><span class="p">.</span><span class="nx">extract</span><span class="p">(</span><span class="s1">'style-loader'</span><span class="p">,</span> <span class="s1">'css-loader!resolve-url!sass-loader?sourceMap'</span><span class="p">)</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Здесь мы указываем, что все <em>.scss</em> файлы будут обработаны сначала <strong>sass-loader</strong>, который на выходе сгенерирует обычный css. Затем в дело вступает <strong>resolve-url-loader</strong>, задача которого найти относительные пути к файлам в css (например, в директиве <code>url(../image.jpg)</code>) и преобразовать их в абсолютные (для этого обязательно нужно включить source-map в предыдущем загрузчике). Результат передаётся в <strong>css-loader</strong>, который непосредственно отвечает за поддержку css в webpack. В случае, если что-то пошло не так, использоваться будет <strong>style-loader</strong>.</p>
+<p>Так, с загрузчиками понятно, а что такое <code>ExtractTextPlugin</code>? Ответ — это плагин, который сохраняет полученный от загрузчиков текст (исходный код) в отдельные чанки.</p>
+<p>А дальше можно сохранить текст из этих чанков в отдельный файл, в данном случае <em>styles.css</em>:</p>
+<pre class="code literal-block"><span></span><span class="k">new</span> <span class="nx">ExtractTextPlugin</span><span class="p">(</span><span class="s1">'styles.css'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">allChunks</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">}),</span>
+</pre>
+
+
+<p>Опция <code>allChunks: true</code> указывает, что нужно все чанки склеить и сохранить в один файл, иначе они будут сохранены в отдельные файлы.</p>
+<p>После обработки, вебпак сгенерирует выходные файлы в директории <code>./static/build/</code>:</p>
+<pre class="code literal-block"><span></span><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">href</span><span class="o">=</span><span class="s">"/static/build/styles.css"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">"text/javascript"</span> <span class="na">src</span><span class="o">=</span><span class="s">"/static/build/bundle.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</pre>
+
+
+<p>В целом данная конфигурация подходит для разработки простых одностраничных приложений. На выходе получается несколько файлов со скриптами и стилями, которые можно подключить на страницу.</p>
+<p>После загрузки бандла, его исходный код будет прочитан и исполнен интерпретатором javascript. Также, благодаря опции <code>output.library</code> <strong>webpack</strong> экспортирует загруженный модуль в переменную с названием секции в <code>entry</code>, в данном случае — <code>bundle</code>. Это очень удобно, так как ваш модуль подключается как библиотека и становится доступен в глобальной области видимости:</p>
+<pre class="code literal-block"><span></span><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="c1">// sayHello — функция, определённая в файле app.js</span>
+<span class="nx">bundle</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">()</span>
+<span class="c1">// или</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">bundle</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">();</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</pre>
+
+
+<p>Стоит учесть, что webpack может генерировать бандлы, которые при загрузке автоматически подключат нужные стили на страницу, это реализуется с помощью <strong>style-loader</strong> и особенно удобно при разработке приложений с большим числом страниц или react-компонентов.</p>
+<p>На этом всё. Удачного кодинга!</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

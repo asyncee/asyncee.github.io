@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Настройка сборки фронтенда для Django на примере django-project-template">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Django, webpack, bower и gulp </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/django-webpack-bower-i-gulp/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../kak-zagruzit-i-sohranit-fajl-iz-interneta-v-pole-modeli-django/" title="Как сохранить файл, доступный по ссылке в поле модели Django" type="text/html">
+<link rel="next" href="../moving-to-jekyll/" title="Про Lektor" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Django, webpack, bower и gulp">
+<meta property="og:description" content="Настройка сборки фронтенда для Django на примере django-project-template">
+<meta property="og:url" content="https://asyncee.github.io/posts/django-webpack-bower-i-gulp/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-05-15T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Django, webpack, bower и gulp</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-05-15T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 15 мая 2016">Опубликовано 15 мая 2016</time></span>
+        <meta name="description" itemprop="description" content="Настройка сборки фронтенда для Django на примере django-project-template">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>В наше время сборка фронтенда становится актуальным и всё более интересным вопросом. Если раньше собирать особо ничего и не требовалось, так как проекты состояли лишь из набора стилей и скриптов, то сейчас, с развитием javascript, появляется всё больше возможностей и интересных технологий.</p>
+<p>Фронтенд меняется, а вместе с ним должны меняться и мы.</p>
+<p>В качестве демонстрационного проекта буду рассматривать мой шаблон <a href="https://github.com/asyncee/django-project-template">проекта для Django</a>.</p>
+<p>Итак, у нас в проекте используются технологии:</p>
+<ul>
+<li>стили в scss, с трансляцией в css</li>
+<li>скрипты на javascript (ES2015, ES7, JSX), с трансляцией в ES5</li>
+<li>для сборки скриптов (и стилей) в бандл используется <strong>webpack</strong>
+</li>
+<li>для установки зависимостей для сборки проекта используется <strong>npm</strong>
+</li>
+<li>для установки библиотек от вендоров (статика) — <strong>bower</strong>
+</li>
+<li>для задач по сборке фронтенда используется <strong>gulp</strong>
+</li>
+<li>gulpfile использует синтаксис ES2015 и требует Node 6.</li>
+</ul>
+<h3>Полезные ссылки</h3>
+<p>Привожу все ссылки на исходники вначале статьи, так как дальше кода не будет, а будет общее описание подхода.</p>
+<ul>
+<li>описываемый <a href="https://github.com/asyncee/django-project-template">шаблон проекта</a>
+</li>
+<li><a href="https://github.com/asyncee/django-project-template/blob/master/gulpfile.js">gulpfile.js</a></li>
+<li><a href="https://github.com/asyncee/django-project-template/blob/master/webpack.config.js">конфиг webpack</a></li>
+<li><a href="https://github.com/asyncee/django-project-template/blob/master/package.json">описание frontend-зависимостей</a></li>
+</ul>
+<h3>Структура директорий</h3>
+<p>Приведу частичную структуру директорий, касающуюся только фронтенда.</p>
+<pre class="code literal-block"><span></span>.
+├── assets
+│   ├── js
+│   │   └── index.js
+│   └── sass
+│       └── index.scss
+├── .bowerrc
+├── bower.json
+├── gulpfile.js
+├── package.json
+├── src
+│   ├── manage.py
+│   ├── project_name
+│   │   ├── __init__.py
+│   │   ├── static
+│   │   │   ├── build
+│   │   │   ├── css
+│   │   │   ├── vendor
+│   │   │   ├── img
+│   │   │   └── js
+│   │   ├── templates
+│   │   ├── urls.py
+│   │   └── views.py
+└── webpack.config.js
+</pre>
+
+
+<p>Итак, как видно у нас две основные директории — <code>src</code> с исходниками приложения (бэкенда) и <code>assets</code> с исходниками графического интерфейса (фронтенд).</p>
+<p>Преобразованные исходные файлы собираются в бандлы и кладутся в директорию проекта <code>project_name/static/build</code>, откуда и подключаются. Таким образом сборка прозрачно интегрируется с подсистемой статических файлов Django (<code>django.contrib.staticfiles</code>).</p>
+<h3>Зависимости проекта</h3>
+<p>Все зависимости для сборки проекта описаны в файле <code>package.json</code>. При развёртывании они устанавливаются с помощью команды <code>npm install</code>.</p>
+<p>Также используется bower для управления статикой, а конкретно для удобной установки и обновления библиотек. Все либы ставятся в <code>project_name/static/vendor/</code> и <strong>коммитятся</strong> в репозиторий.</p>
+<h3>Стили</h3>
+<p>Стили лежат в директории <code>assets/scss</code> и импортируются в файл <code>index.scss</code>. Сборка происходит с помощью тасков в gulp: <code>sass:dev</code> и <code>sass:prod</code>. В область видимости sass добавлена директория <code>node_modules</code>, так что исходники их сторонних пакетов можно импортировать прямо оттуда.</p>
+<p>Пример подключения <em>bootstrap-sass</em>:</p>
+<pre class="code literal-block"><span></span>$ cat assets/sass/index.scss
+
+@import <span class="s2">"bootstrap-sass/assets/stylesheets/bootstrap"</span><span class="p">;</span>
+</pre>
+
+
+<p>Для дополнительного удобства разработки, в gulp подключен Browsersync, так что менять стилевое оформление можно прямо «на ходу». Разумеется, всё запускается автоматически, одной командой, но об этом позже.</p>
+<h3>Скрипты</h3>
+<p>Скрипты лежат соответственно в <code>assets/js</code> и подключаются в <code>index.js</code>. Сборка происходит с помощью <code>webpack</code>. Кстати сборщик умеет автоматически подключать нужные стили прямо в runtime (аттачит их в head страницы).</p>
+<p>Поддерживается синтаксис ES2015 с фичами из ES7, а также JSX. За транспайлинг отвечает babel.</p>
+<h3>Задачи для сборки проекта</h3>
+<p>Для сборки проекта используется два типа задач — сборка в продакшн и девелопмент-сборка. Отличие сборок заключается в том, что для боевой сборки мы используем минификацию и прочие оптимизации, а для локальной — нет. На скорости это тоже отражается, так как пересборка изменений происходит на лету, при изменении исходных файлов — за этим следит gulp.</p>
+<p>Вот список наших задач:
+- <code>js:dev</code> и <code>js:prod</code> — сборка яваскрипта
+- <code>sass:dev</code> и <code>sass:prod</code> — сборка стилей
+- <code>django-runserver</code> — запуск сервера django
+- <code>browser-sync</code> — запуск сервера browsersync
+- <code>watch</code> — слежение за изменёнными исходниками и запуск пересборки. Отслеживаются <em>только</em> стили, так как javascript сжимается вебпаком, который работает в режиме наблюдения (watch). Такое разделение обусловлено тем, что вебпак знает как эффективнее пересобрать изменившийся файл.
+- <code>default</code> — запуск сборки стилей, скриптов, сервера django, browsersync и слежения за изменениями. Команды запускаются для сборки разрабатываемой версии.
+- <code>deploy</code> — сборка стилей и скриптов в режиме для продакшена.</p>
+<h3>Интеграция django и gulp</h3>
+<p>Ребята из CaktusGroup в своём блоге <a href="https://www.caktusgroup.com/blog/2016/05/02/es6-django-lovers/">описали</a> опыт по интеграции сборки ассетов в Django−проекте. Вместо того, чтобы привязываться к конкретным инструментам Django (pipeline или compressor), они решили инвертировать процесс — и научили gulp запускать Django-проект (runserver) вместе с другими задачами.</p>
+<p>Этот подход реализован и у нас, и, должен сказать — работает превосходно. Для того, чтобы приступить к полноценной разработке, достаточно одной команды — <code>gulp</code>. Всё запустится автоматически и будет готово к работе через несколько секунд. А благодаря Browsersync ещё и вкладка с сайтом откроется в браузере автоматически :)</p>
+<p>Единственный нюанс в том, чтобы настроить работу Browsersync на порту 8000, а Django запускать на другом, например, 3000 и проксировать запросы от первого ко второму. Тогда для разработчика вообще всё будет прозрачно.</p>
+<h3>Итого</h3>
+<p>Данный подход позволяет нам ускорить процесс разработки и сделать его более удобным. Отсутствие ограничений в выборе используемых технологий и настройке сборки позволяет максимально гибко подстраиваться под меняющиеся реалии веб-разработки.</p>
+<p>Одно могу сказать точно — пока в Django не появится крутой asset pipeline, мы будем использовать описанный в статье подход к разработке фронтенда.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

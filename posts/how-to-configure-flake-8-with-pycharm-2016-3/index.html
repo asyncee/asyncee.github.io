@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Конфигурация проверки всего проекта">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Как настроить flake8 для работы в Pycharm 2016.3 </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/how-to-configure-flake-8-with-pycharm-2016-3/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../gorgeous-python-3/" title="Великолепный Python 3" type="text/html">
+<link rel="next" href="../how-to-push-to-multiple-git-remotes/" title="Git: как сделать push в несколько репозиториев одновременно" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Как настроить flake8 для работы в Pycharm 2016.3">
+<meta property="og:description" content="Конфигурация проверки всего проекта">
+<meta property="og:url" content="https://asyncee.github.io/posts/how-to-configure-flake-8-with-pycharm-2016-3/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2017-03-10T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Как настроить flake8 для работы в Pycharm 2016.3</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2017-03-10T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 10 марта 2017">Опубликовано 10 марта 2017</time></span>
+        <meta name="description" itemprop="description" content="Конфигурация проверки всего проекта">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Потребовалось мне настроить <em>flake8</em> в <em>Pycharm</em> таким образом, чтобы проверялся весь проект сразу и по итогу запуска выдавались кликабельные результаты в консоли — щёлкнул на проблемный файл и сразу перешёл на нужное место.</p>
+<p>В интернете есть много примеров конфигурации, но ни одного работающего из коробки я не нашёл, поэтому публикую своё решение.</p>
+<ol>
+<li>Открываем проект</li>
+<li>Идём в меню <em>File</em> → <em>Settings</em>, либо нажимаем <code>Ctrl + Alt + S</code> (в Linux).</li>
+<li>Переходим в <em>Tools</em> → <em>External tools</em> и нажимаем на +, чтобы добавить новую запись.</li>
+<li>Заполняем форму как на скриншоте ниже:</li>
+</ol>
+<p><img alt="" src="../../public/posts/pycharm-flake8.png"></p>
+<p>Обратите внимание, что для вашего проекта, возможно, потребуется по−другому заполнить поля <em>Parameters</em> и <em>Working directory</em>. В моём случае всё заработало именно в такой конфигурации.</p>
+<p>{:start="5"}
+5. Нажимаем кнопку <em>Output filters</em> и далее добавляем новый фильтр, который будет парсить результаты выдачи <em>Flake 8</em>:</p>
+<p><img alt="Настройка фильтров" src="../../public/posts/pycharm-flake8-filters.png"></p>
+<p>Под Linux есть такой вот баг, с обрезанием поля ввода, поэтому дублирую:</p>
+<pre class="code literal-block"><span></span>$FILE_PATH$\:$LINE$\:$COLUMN$\:.*
+</pre>
+
+
+<p>В итоге, после запуска <em>Flake 8</em> (из меню <em>Tools</em> → <em>External tools</em>) будет такой результат:</p>
+<p><img alt="Кликабельные результаты" src="../../public/posts/pycharm-flake8-results.png"></p>
+<p>Изображение взято <a href="https://habrahabr.ru/company/dataart/blog/318776/">отсюда</a>.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

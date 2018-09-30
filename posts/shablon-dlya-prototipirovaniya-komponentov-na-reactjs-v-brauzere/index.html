@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Создаём прототип компонента за несколько минут">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Шаблон для прототипирования компонентов на reactjs в браузере </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../nastrojka-webpack-dlya-raboty-s-react-i-scss/" title="Настройка webpack для работы с react и sass" type="text/html">
+<link rel="next" href="../ustanovka-postgresql-v-ubuntu-linut-mint/" title="Установка postgresql в Ubuntu / Linux Mint" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Шаблон для прототипирования компонентов на reactjs в браузере">
+<meta property="og:description" content="Создаём прототип компонента за несколько минут">
+<meta property="og:url" content="https://asyncee.github.io/posts/shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-04-12T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Шаблон для прототипирования компонентов на reactjs в браузере</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-04-12T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 12 апреля 2016">Опубликовано 12 апреля 2016</time></span>
+        <meta name="description" itemprop="description" content="Создаём прототип компонента за несколько минут">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Недавно мне потребовалось очень быстро получить работающий прототип компонента на <strong>react</strong>, а под рукой не оказалось стандартных инструментов для создания проекта. Поэтому я немного подумал — и создал шаблон для написания компонентов прямо в браузере.</p>
+<p>Плюс данного решения — можно уже через минуту после клонирования проекта с шаблоном получить рабочий компонент, поддерживается <strong>ES6</strong>, <strong>ES7</strong>, <strong>JSX</strong>.</p>
+<p>Минусов больше — решение нестандартное, официально не поддерживается, грузится долго (загрузка библиотек, транспайлинг). Но все эти нюансы не имеют никакого значения, если вам просто нужно получить рабочий прототип — посмотреть, проверить и переписать всё нормально.</p>
+<p>Актуальную версию исходников можно получить <a href="https://github.com/asyncee/react-minimal.git">по ссылке</a>.</p>
+<p>Сам код простой:</p>
+<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">"en"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Minimal React<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">type</span><span class="o">=</span><span class="s">"text/css"</span> <span class="na">href</span><span class="o">=</span><span class="s">"style.css"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.4.4/babel.min.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://code.jquery.com/jquery-2.2.3.min.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://fb.me/react-15.0.1.min.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://fb.me/react-dom-15.0.1.min.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+        <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="nb">eval</span><span class="p">(</span><span class="nx">Babel</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">'script[type="text/babel"]'</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="p">{</span>
+                <span class="nx">presets</span><span class="o">:</span> <span class="p">[</span><span class="s1">'es2015'</span><span class="p">,</span> <span class="s1">'react'</span><span class="p">,</span> <span class="s1">'stage-0'</span><span class="p">]</span>
+            <span class="p">}).</span><span class="nx">code</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"app"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">"text/babel"</span><span class="p">&gt;</span>
+        <span class="kr">class</span> <span class="nx">HelloWorld</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+            <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">greeting</span><span class="o">:</span> <span class="s1">'Hello world!'</span>
+            <span class="p">}</span>
+
+            <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">"greeting"</span><span class="o">&gt;</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">greeting</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">"text/babel"</span><span class="p">&gt;</span>
+        <span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">HelloWorld</span><span class="o">/&gt;</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'app'</span><span class="p">))</span>
+    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre>
+
+
+<p>Как видно, для работы компонентов необходимо код размещать внутри тегов <code>script</code> с атрибутом <code>type="text/babel"</code>. Содержимое тегов конкатенируется, преобразуется в ES5 и исполняется.</p>
+<p>Вот так всё просто.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

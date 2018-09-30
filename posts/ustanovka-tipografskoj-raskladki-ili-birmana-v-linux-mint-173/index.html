@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Интродукция для начинающих">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Установка типографской раскладки Ильи Бирмана в Linux Mint 17.3 </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/ustanovka-tipografskoj-raskladki-ili-birmana-v-linux-mint-173/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../django-19-i-robokassa/" title="Django 1.9 и робокасса" type="text/html">
+<link rel="next" href="../vspomogatelnye-obuekty-dlya-verstalshika-v-django/" title="Вспомогательные объекты для верстальщика в Django" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Установка типографской раскладки Ильи Бирмана в Linux Mint 17.3">
+<meta property="og:description" content="Интродукция для начинающих">
+<meta property="og:url" content="https://asyncee.github.io/posts/ustanovka-tipografskoj-raskladki-ili-birmana-v-linux-mint-173/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-03-10T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Установка типографской раскладки Ильи Бирмана в Linux Mint 17.3</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-03-10T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 10 марта 2016">Опубликовано 10 марта 2016</time></span>
+        <meta name="description" itemprop="description" content="Интродукция для начинающих">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Решил попробовать что такое типографская раскладка и с чем её едят — прочитал несколько статей, и, в конце концов, решился попробовать. Для русского языка самой популярной является <a href="http://ilyabirman.ru/projects/typography-layout/">типографская раскладка Ильи Бирмана</a>. Она позволяет удобно вводить редкие символы, такие как длинное тире, или «ёлочки».</p>
+<p>Расположение символов можно оценить на изображении ниже:</p>
+<p><img alt="типографская раскладка Ильи Бирмана" src="../../public/posts/layout-win-2x.png"></p>
+<h3>Установка</h3>
+<p>Так как я пользуюсь Linux Mint, то и опишу установку именно для него. К сожалению, автор не поддерживает Linux по-умолчанию, поэтому мы воспользуемся альтернативной раскладкой «Рукби», которая основывается на типографской раскладке Ильи Бирмана и включает в себя её версию для «Линукса» (на данный момент это версия 2.0.4).</p>
+<ul>
+<li>Идём на битбакет и скачиваем архив с раскладкой <a href="https://bitbucket.org/denyspopov/rukbi/downloads">отсюда</a>
+</li>
+<li>распаковываем <code>tar xf rukbi-3.5.tar.bz2</code>
+</li>
+<li>выполняем <code>sudo install/install</code> — <strong>разумеется внимательно ознакомившись с содержимым скриптов, чтобы удостовериться что там нет <em>rm -rf /</em>, например</strong>.</li>
+<li>открываем настройки клавиатуры</li>
+<li>на вкладке «Раскладки» добавляем две новые раскладки — «Английская раскладка Ильи Бирмана» и «Русская раскладка Ильи Бирмана»</li>
+<li>щёлкаем на кнопку «параметры» и открываем «параметры раскладки клавиатуры»</li>
+<li>В списке «Клавиша для выбора 3-го ряда» выбираем значение «Правая клавиша Alt»</li>
+<li>У меня после этого сбросилось переключение раскладок, поэтому в списке «Переключение на другую раскладку» я вручную отметил «Левая Alt+Левая Shift»</li>
+</ul>
+<p>Готово! Можно проверять в любом поле для ввода текста. Чтобы напечатать длинный пробел, например, необходимо нажать «правый альт + минус», а для стрелки вправо (→) «правый альт + ноль».</p>
+<h3>Читайте также</h3>
+<p>Для тех, кому интересно почитать информацию по теме, прикладываю список ссылок</p>
+<ul>
+<li><a href="http://ilyabirman.ru/projects/typography-layout/">официальная страница раскладки</a></li>
+<li><a href="http://hermes-envoy.ru/tipografskaya-raskladka-klaviatury-ili-birmana.html">статья, подробнее рассказывающая про раскладку</a></li>
+<li><a href="http://hermes-envoy.ru/tipografskaya-raskladka-v-linux.html">другие способы установки в Linux</a></li>
+<li><a href="http://besisland.name/rukbi/">клавиатурная раскладка «Рукби»</a></li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

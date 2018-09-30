@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Подход к реализации паттерна method chaining">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Цепочка вызова методов в Python </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/cepochka-vyzova-metodov-v-python/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../poluchenie-pervogo-elementa-spiska/" title="Получение первого элемента списка в Python" type="text/html">
+<link rel="next" href="../ustanovka-kitematic-v-linux/" title="Установка Kitematic в Linux" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Цепочка вызова методов в Python">
+<meta property="og:description" content="Подход к реализации паттерна method chaining">
+<meta property="og:url" content="https://asyncee.github.io/posts/cepochka-vyzova-metodov-v-python/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-03-23T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Цепочка вызова методов в Python</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-03-23T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 23 марта 2016">Опубликовано 23 марта 2016</time></span>
+        <meta name="description" itemprop="description" content="Подход к реализации паттерна method chaining">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Каждый программист сталкивался с цепочками вызова методов, но не все задумываются о том, как реализуется данный паттерн. Принцип использования цепочки вызова методов заложен в API множества программных продуктов, например, <strong>Django QuerySet</strong>, селекторы <strong>jQuery</strong>, <strong>elasticsearch-dsl Query</strong> и так далее.</p>
+<p>Зачем это нужно? Такой подход повышает читабельность программы. Сравните два примера:</p>
+<pre class="code literal-block"><span></span><span class="n">car</span> <span class="o">=</span> <span class="n">Car</span><span class="p">()</span>
+<span class="n">car</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">'red'</span><span class="p">)</span>
+<span class="n">car</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s1">'BMW'</span><span class="p">)</span>
+<span class="n">car</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="s1">'M3'</span><span class="p">)</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span><span class="n">car</span> <span class="o">=</span> <span class="n">Car</span><span class="p">()</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">'red'</span><span class="p">)</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s1">'BMW'</span><span class="p">)</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="s1">'M3'</span><span class="p">)</span>
+</pre>
+
+
+<p>Второй пример короче и проще читается.</p>
+<p>Цепочка вызова является реализацией <a href="https://ru.wikipedia.org/wiki/Fluent_interface">текучего интерфейса</a>, вся суть которого заключается в том, что в результате вызова любого метода необходимо вернуть указатель на текущий объект класса, что позволяет вызывать методы по цепочке.</p>
+<p>Тут есть нюанс. В классической реализации методы изменяют состояние объекта, на котором вызываются, что приводит к нарушению принципа DRY и не позволяет делать такие вещи:</p>
+<pre class="code literal-block"><span></span><span class="c1"># задача — создать две красных машины разных моделей</span>
+<span class="n">car</span> <span class="o">=</span> <span class="n">Car</span><span class="p">()</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">'red'</span><span class="p">)</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s1">'BMW'</span><span class="p">)</span>
+<span class="n">m3</span> <span class="o">=</span> <span class="n">car</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="s1">'m3'</span><span class="p">)</span>
+<span class="n">m4</span> <span class="o">=</span> <span class="n">car</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="s1">'m4'</span><span class="p">)</span>
+</pre>
+
+
+<p>В данном случае объект класса <code>Car</code> — изменяемый (mutable), а поэтому <code>id(car) == id(m3) == id(m4)</code>, то есть это один объект.</p>
+<p>Данное поведение не является ошибкой, когда действительно нужно изменять состояние объекта.</p>
+<p>В противном случае, на каждом шаге необходимо возвращать <strong>копию</strong> объекта (необходимо учитывать повышенный расход памяти и процессорного времени). Такой подход используется в <code>Django QuerySet</code>:</p>
+<pre class="code literal-block"><span></span><span class="n">active_records</span> <span class="o">=</span> <span class="n">Record</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span><span class="p">()</span>  <span class="c1"># QuerySet с базовым состоянием</span>
+<span class="n">new_records</span> <span class="o">=</span> <span class="n">active_records</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>  <span class="c1"># Копия предыдущего QuerySet с фильтром по новым записям</span>
+<span class="n">old_records</span> <span class="o">=</span> <span class="n">active_records</span><span class="o">.</span><span class="n">old</span><span class="p">()</span>  <span class="c1"># Ещё одна копия QuerySet с фильтром по старым записям</span>
+</pre>
+
+
+<p>Итак, привожу мою реализацию, с тестами. Скачать исходник вы можете из <a href="https://gist.github.com/asyncee/d57ad89267d16962ae75">этого gist</a>:</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">Sequence</span>
+
+
+<span class="n">Item</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">'Item'</span><span class="p">,</span> <span class="s1">'name, price'</span><span class="p">)</span>
+
+<span class="n">items</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Item</span><span class="p">(</span><span class="s1">'apple'</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+    <span class="n">Item</span><span class="p">(</span><span class="s1">'banana'</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">),</span>
+    <span class="n">Item</span><span class="p">(</span><span class="s1">'orange'</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">),</span>
+    <span class="n">Item</span><span class="p">(</span><span class="s1">'coconut'</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">Query</span><span class="p">(</span><span class="n">Sequence</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">q</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">q</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Filter by condition.</span>
+<span class="sd">        Condition must be a function taking one argument (an object),</span>
+<span class="sd">        and returning True or False.</span>
+<span class="sd">        """</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Query</span><span class="p">([</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">q</span> <span class="k">if</span> <span class="n">cond</span><span class="p">(</span><span class="n">o</span><span class="p">)])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">'price'</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="n">q2</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">id</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">items</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">id</span><span class="p">(</span><span class="n">q2</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="o">==</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">last</span><span class="p">()</span> <span class="o">==</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s1">'apple'</span><span class="p">,</span> <span class="s1">'banana'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'coconut'</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">'price'</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">price</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s1">'coconut'</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">price</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">total</span> <span class="o">==</span> <span class="mf">50.0</span>
+
+    <span class="k">assert</span> <span class="n">q</span><span class="o">.</span><span class="n">total</span> <span class="o">==</span> <span class="mf">80.0</span>
+</pre>
+
+
+<p>Данный пример является лишь демонстрацией и говорит сам за себя. Следует учитывать, что при вызове каждого метода, происходит копирование объекта вместе со всем набором данных. Для данного конкретного случая этот момент можно оптимизировать, но уже в рамках другой статьи :)</p>
+<p>Удачного кодинга!</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

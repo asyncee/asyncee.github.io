@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Как решить проблемы с тестовыми платежами">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Django 1.9 и робокасса </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/django-19-i-robokassa/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="next" href="../ustanovka-tipografskoj-raskladki-ili-birmana-v-linux-mint-173/" title="Установка типографской раскладки Ильи Бирмана в Linux Mint 17.3" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Django 1.9 и робокасса">
+<meta property="og:description" content="Как решить проблемы с тестовыми платежами">
+<meta property="og:url" content="https://asyncee.github.io/posts/django-19-i-robokassa/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-03-02T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Django 1.9 и робокасса</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-03-02T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 02 марта 2016">Опубликовано 02 марта 2016</time></span>
+        <meta name="description" itemprop="description" content="Как решить проблемы с тестовыми платежами">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Возникла недавно задача реализовать возможность проведения онлайн-платежей через <a href="https://www.robokassa.ru">робокассу</a>. Вот уже несколько лет использую для этого приложение <a href="https://github.com/kmike/django-robokassa">django-robokassa</a> от kmike.</p>
+<p>Приложение подключил, проект настроил, соответствующий код для обработки заказов и платежей написал. Проверяю — не работает, вместо формы тестового платежа, робокасса показывает страницу с предложением зарегистрироваться и описанием сервиса. Хм.</p>
+<p>Начал разбираться — полез в документацию сервиса и обнаружил там ссылку на проверку платежа прямо из личного кабинета. Ссылка перехода на форму тестового платежа теперь выглядит идентично форме проведения настоящих платежей и
+располагается по-другому адресу: https://auth.robokassa.ru/Merchant/Index.aspx</p>
+<p>Ко всему прочему, теперь ещё и необходимо указывать дополнительный параметр <code>IsTest=1</code> при отправке тестового запроса на проведение платежа, иначе платёж считается боевым.</p>
+<p>Вариантов решения проблемы я нашёл три:</p>
+<ul>
+<li>создать issue на github автора приложения</li>
+<li>сделать форк приложения, исправить проблемы и сделать pull-request</li>
+<li>сделать форк приложения с новым именем, например, django-robokassa-asyncee и вести самостоятельную разработку (нужно проверить лицензию)</li>
+</ul>
+<p>Для начала я решил выбрать первый вариант, фиксы там буквально в две строки, поэтому, если kmike заинтересован в судьбе проекта, то нужные изменения он внесёт. А в текущем проекте я просто отнаследовался от <code>RobokassaForm</code> и переопределил несколько методов, но это временное решение.</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">CustomRobokassaForm</span><span class="p">(</span><span class="n">RobokassaForm</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">TEST_MODE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">u</span><span class="s1">'https://auth.robokassa.ru/Merchant/Index.aspx'</span>
+
+        <span class="k">return</span> <span class="n">conf</span><span class="o">.</span><span class="n">FORM_TARGET</span>
+
+    <span class="k">def</span> <span class="nf">get_redirect_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">""" Получить URL с GET-параметрами, соответствующими значениям полей в</span>
+<span class="sd">        форме. Редирект на адрес, возвращаемый этим методом, эквивалентен</span>
+<span class="sd">        ручной отправке формы методом GET.</span>
+<span class="sd">        """</span>
+        <span class="k">def</span> <span class="nf">_initial</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">initial</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">val</span>
+            <span class="k">return</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'1251'</span><span class="p">)</span>
+
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">_initial</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
+                  <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                  <span class="k">if</span> <span class="n">_initial</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+                  <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">TEST_MODE</span><span class="p">:</span>
+            <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">u</span><span class="s1">'IsTest'</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'1251'</span><span class="p">),</span> <span class="sa">u</span><span class="s1">'1'</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'1251'</span><span class="p">)))</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">+</span><span class="s1">'?'</span><span class="o">+</span><span class="n">params</span>
+</pre>
+
+
+<p>На данный момент репозиторий проекта выглядит заброшенным, возможно автор потерял интерес к приложению, такое бывает. Ничего страшного в этом нет, ведь в этом и суть OpenSource - в любой момент можно сделать свой вклад.</p>
+<p>Кстати, недавно появился ещё один проект <a href="https://github.com/DirectlineDev/django-robokassa-merchant">django-robokassa-merchant</a>, основанный на оригинальном <code>django-robokassa</code>. На данный момент проект находится в состоянии разработки, нет документации, везде пестрят надписи «TODO»,  но есть тесты, и, судя по коду, проект более перспективный, так как предполагает возможность проведения платежей из-под разных мерчантов (аккаунтов в робокассе) в рамках одного сайта, плюс используется <code>GenericForeignKey</code> для связи с кастомными вариантами вашей модели заказа.</p>
+<p><strong>UPDATE</strong>: автор действительно больше не поддерживает приложение, в том числе и репозиторий на bitbucket. Однако, похоже, что кто-то ранее столкнулся с такой же проблемой и решил это в своём проекте и сделал pull-request как ответ на мой issue. Изменения и merge можно посмотреть <a href="https://github.com/kmike/django-robokassa/commit/9854d677de050e3056e7e0534c11597ca8f83f14">здесь</a>.</p>
+<p>На данный момент версия приложения django-robokassa в актуальном состоянии.</p>
+<p><strong>UPDATE  от 30 апреля</strong>: Пользователь Salavat Sharapov в комментариях уточнил, что есть форк на bitbucket с фиксами от Sergey Gornostayev. Посмотреть можно <a href="https://bitbucket.org/TheDeadOne/django-robokassa/src">здесь</a>. Из основных изменений можно выделить поддержку Python 3.5 и Django 1.9.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

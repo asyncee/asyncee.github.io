@@ -1,0 +1,57 @@
+html {
+    font-family: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif;
+}
+
+code, pre{
+    font-family: "Roboto Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+pre {
+    word-break: normal;
+    word-wrap: normal;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+h3 {
+    margin-top: 2.5rem;
+}
+h2, h4, h5, h6 {
+    margin-top: 2rem;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans;
+    font-weight: 500;
+}
+
+.hsidebar a {
+    font-weight: normal;
+}
+
+.post-title {
+    line-height: 2.2rem;
+    margin-bottom: 20px;
+}
+
+.post-lead {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #515151;
+    cursor: pointer;
+}
+
+.post-lead:hover {
+    text-decoration: none;
+}
+
+.pagination {
+    font-family: Lora, "Times New Roman", Georgia, "Droid Serif", "DejaVu Serif", serif;
+}
+
+@media (min-width: 48em) {
+  .content {
+    max-width: 40rem;
+  }
+}

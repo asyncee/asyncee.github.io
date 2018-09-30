@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Или запускаем контейнеры красиво">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Установка Kitematic в Linux </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/ustanovka-kitematic-v-linux/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../cepochka-vyzova-metodov-v-python/" title="Цепочка вызова методов в Python" type="text/html">
+<link rel="next" href="../nastrojka-webpack-dlya-raboty-s-react-i-scss/" title="Настройка webpack для работы с react и sass" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Установка Kitematic в Linux">
+<meta property="og:description" content="Или запускаем контейнеры красиво">
+<meta property="og:url" content="https://asyncee.github.io/posts/ustanovka-kitematic-v-linux/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2016-03-29T23:00:00+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+              <h1>
+                <a href="https://asyncee.github.io/">
+                      <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                </a>
+              </h1>
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+                <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Установка Kitematic в Linux</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2016-03-29T23:00:00+03:00" itemprop="datePublished" title="Опубликовано 29 марта 2016">Опубликовано 29 марта 2016</time></span>
+        <meta name="description" itemprop="description" content="Или запускаем контейнеры красиво">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p><img alt="kitematic" src="../../public/posts/kite.png"></p>
+<h3>Что такое Kitematic</h3>
+<p><a href="https://kitematic.com/"><strong>Kitematic</strong></a> — инструмент, предоставляющий графический интерфейс для работы с контейнерами docker. Если кратко — позволяет разворачивать контейнеры в несколько кликов, интегрируется с Docker Hub, позволяет видеть актуальные логи запущенного процесса и производить базовую настройку в GUI.</p>
+<p>Конечно, консоль никто не отменял, но для базовых вещей вполне подходит. К тому же удобно использовать этот инструмент для тестирования разных технологий и сервисов. Захотел посмотреть блоговую платформу <strong>Ghost</strong> — развернул контейнер, не понравилась — удалил. На всё про всё уйдёт десять минут.</p>
+<h4>Установка в Linux</h4>
+<p>Пользователи Linux как обычно, страдают — поддерживается только Mac и Windows, однако недавно была реализована установка для linux в ручном режиме. Я буду приводить инструкции для Debian / Ubuntu, но в ArchLinux, вроде, тоже работает.</p>
+<p><strong>Для параноиков</strong>: обратите внимание, что в инструкциях ниже предлагается производить установку посредством выполнения скриптов из (относительно) не проверенных источников. Рекомендую (на всякий случай) проверить что там внутри.</p>
+<h4>Установка зависимостей Kitematic</h4>
+<p>Ставим системные пакеты в терминале под рутом:</p>
+<pre class="code literal-block"><span></span>$ apt-get install build-essential libcanberra-gtk-module
+</pre>
+
+
+<p>Устанавливаем nodejs . На данный момент поддерживается версия 4.2.2. Разумно для этого использовать nvm:</p>
+<pre class="code literal-block"><span></span>$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh <span class="p">|</span> bash
+$ . ~/.nvm/nvm.sh
+</pre>
+
+
+<p>Для работы nvm, необходимо добавить следующие строки в <code>~/.profile</code> или <code>~/.bashrc</code>:</p>
+<pre class="code literal-block"><span></span><span class="nb">export</span> <span class="nv">NVM_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.nvm"</span>
+<span class="o">[</span> -s <span class="s2">"</span><span class="nv">$NVM_DIR</span><span class="s2">/nvm.sh"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> . <span class="s2">"</span><span class="nv">$NVM_DIR</span><span class="s2">/nvm.sh"</span> <span class="c1"># This loads nvm</span>
+</pre>
+
+
+<p>Теперь можно поставить nodejs необходимой версии и сделать её интерпретатором по-умолчанию:</p>
+<pre class="code literal-block"><span></span>nvm install <span class="m">4</span>.2.2
+nvm <span class="nb">alias</span> default v4.2.2
+</pre>
+
+
+<p>Чтобы проверить, всё-ли вы сделали правильно, лучше выполнить команду <code>node -v</code> и удостовериться, что версия <code>4.2.2</code>.</p>
+<h4>Установка Docker</h4>
+<p>Если Docker уже стоит - прекрасно, если нет, то ставим его:</p>
+<pre class="code literal-block"><span></span>$ curl -sSL https://get.docker.com/ <span class="p">|</span> sudo sh
+$ sudo gpasswd -a <span class="si">${</span><span class="nv">USER</span><span class="si">}</span> docker
+$ sudo service docker restart
+$ newgrp docker
+</pre>
+
+
+<h4>Установка Kinematic</h4>
+<pre class="code literal-block"><span></span>$ <span class="nb">cd</span> ~/bin
+$ git clone https://github.com/docker/kitematic
+$ <span class="nb">cd</span> kitematic/
+$ make
+$ npm start <span class="c1"># запуск приложения</span>
+</pre>
+
+
+<p>Команда <code>make</code> соберёт приложение. Для запуска можно использовать команду <code>npm start</code>, но я предпочёл создать скрипт для запуска:</p>
+<pre class="code literal-block"><span></span>$ cat ~/bin/kite
+
+<span class="c1">#!/bin/bash</span>
+
+bash -c <span class="s1">'cd /home/asyncee/bin/kitematic &amp;&amp; npm start'</span>
+</pre>
+
+
+<h4>Читайте также</h4>
+<ul>
+<li><a href="https://github.com/docker/kitematic/wiki/Early-Linux-Support">Документация по-установке на английском</a></li>
+<li><a href="https://kitematic.com/">Сайт Kitematic</a></li>
+<li><a href="https://www.docker.com/">Сайт Docker</a></li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                
+
+        </section></article>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>
