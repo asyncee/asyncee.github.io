@@ -186,7 +186,8 @@ h2, h3, h4, h5, h6 {
     background: none;
     position: relative;
     opacity: 1;
-    margin-bottom: 1rem; }
+    margin-bottom: 1rem;
+    height: auto; }
     #menuToggle #menu a {
       padding: 0;
       font-size: inherit; } }
