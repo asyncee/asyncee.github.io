@@ -1052,7 +1052,7 @@ PRETTY_URLS = True
 # Generally, you want FUTURE_IS_NOW and DEPLOY_FUTURE to be the same value.
 # DEPLOY_FUTURE = False
 # If False, draft posts will not be deployed
-# DEPLOY_DRAFTS = True
+DEPLOY_DRAFTS = False
 
 # Allows scheduling of posts using the rule specified here (new_post -s)
 # Specify an iCal Recurrence Rule: http://www.kanzaki.com/docs/ical/rrule.html
@@ -1110,9 +1110,10 @@ PRETTY_URLS = True
 #       with the MarkdownExtension class and should not be added here.
 # The default is ['fenced_code', 'codehilite']
 MARKDOWN_EXTENSIONS = [
-    "markdown.extensions.fenced_code",
-    "markdown.extensions.codehilite",
-    "markdown.extensions.extra",
+    "fenced_code",
+    "codehilite",
+    "extra",
+    "meta",
 ]
 
 # Options to be passed to markdown extensions (See https://python-markdown.github.io/reference/)
