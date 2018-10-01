@@ -24,7 +24,21 @@
             {{ header.html_site_title() }}
             {{ header.html_site_description() }}
             </div>
-            {{ header.html_navigation_links() }}
+
+            {# Made by Erik Terwan, MIT License #}
+            <div id="menuToggle">
+                {# pure css toggle #}
+                <input type="checkbox" />
+
+                {# hamburger spans #}
+                <span></span>
+                <span></span>
+                <span></span>
+
+                {# navigation menu #}
+                {{ header.html_navigation_links() }}
+            </div>
+
             {{ footer.html_footer() }}
         </div>
     </div>
