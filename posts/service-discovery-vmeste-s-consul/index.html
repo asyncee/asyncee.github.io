@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" vocab="http://ogp.me/ns" lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Обзорная статья">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asyncee · Service Discovery вместе с Consul </title>
+<link href="../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700%7CAbril+Fatface">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://asyncee.github.io/posts/service-discovery-vmeste-s-consul/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="yandex-verification" content="4db6105a4cf78b07">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface%7CLora:400,400i,700%7CRoboto:500%7CRoboto+Mono&amp;subset=cyrillic" rel="stylesheet">
+<meta name="author" content="Stanislav Lobanov">
+<link rel="prev" href="../moved-to-nikola/" title="Блог переехал на Nikola" type="text/html">
+<meta property="og:site_name" content="Asyncee">
+<meta property="og:title" content="Service Discovery вместе с Consul">
+<meta property="og:description" content="Обзорная статья">
+<meta property="og:url" content="https://asyncee.github.io/posts/service-discovery-vmeste-s-consul/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:article:published_time" content="2018-10-11T18:16:22+03:00">
+</head>
+<body class="">
+    <a href="#content" class="sr-only sr-only-focusable">Перейти к главному содержимому</a>
+
+    <div class="hsidebar">
+        <div class="container sidebar-sticky">
+            <div class="sidebar-about">
+                <h1 id="brand"><a href="https://asyncee.github.io/" title="Asyncee" rel="home">
+
+        <span id="blog-title">Asyncee</span>
+    </a></h1>
+
+                <p class="lead">Stanislav Lobanov</p>
+
+            </div>
+
+            <div id="menuToggle">
+                <input type="checkbox"><span></span>
+                <span></span>
+                <span></span>
+
+                    <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Архив</a>
+        <a class="sidebar-nav-item" href="../../categories/">Тэги</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS лента</a>
+    
+    
+    </nav>
+</div>
+
+            
+        </div>
+    </div>
+
+    <div class="content container" id="content">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><h1 class="post-title p-name"><a href="." class="u-url">Service Discovery вместе с Consul</a></h1>
+
+    <span class="post-date">
+      <time class="published dt-published" datetime="2018-10-11T18:16:22+03:00" itemprop="datePublished" title="Опубликовано 11 октября 2018">Опубликовано 11 октября 2018</time></span>
+        <meta name="description" itemprop="description" content="Обзорная статья">
+<div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>С ростом популярности микросервисов количество backend-компонентов растёт, иногда в геометрической прогрессии, особенно когда одному микросервису нужна своя база данных, кэш-сервер и т.д. Когда инфраструктуры становится много, возникают новые проблемы, которые тоже приходится решать. Одной из таких проблем является деплой и конфигурация.</p>
+<p>Подходов к решению этой проблемы существует множество, одним из них является использование service discovery на основе Consul.</p>
+<p>Consul - децентрализованная отказоустойчивая система, позволяющая сервисам находить друг друга в сети. Кроме service discovery в Consul есть health checks, kv store, locks и несколько утилит, чтобы всё это максимально эффективно использовать.</p>
+<p>Тем, кто не знаком, советую сходить на <a href="https://www.consul.io">официальный сайт</a>.</p>
+<p>С точки зрения инфраструктуры Consul состоит из агента и сервера. По сути, это один бинарник, запущенный в разных режимах. Для защиты от splitbrain рекомендуется сервер запускать в количестве 3-5 инстансов.</p>
+<p>Агенты же ставятся на каждую ноду с сервисом (например, в openvz контейнер). Таким образом, каждый сервис работает только с локальным агентом, располагающимся на порту 8500.</p>
+<p>Консистентность обеспечивается за счёт того, что серверы общаются между собой по протоколу Raft, а клиенты — Gossip. В один конкретный момент времени есть только один Leader server, который принимает все запросы на запись и распространяет эту информацию по остальной сети. Вся остальная сеть, соответственно работает на чтение. Как очевидно, используется eventual consistency.</p>
+<h2>Что умеет Consul</h2>
+<p><strong>Service discovery</strong> — сервисы регистрируются в каталоге и могут запрашивать информацию о расположении друг друга в сети.</p>
+<p><strong>Health checks</strong> — консул умеет получать информацию о состоянии сервисов c помощью http запросов, скриптов, tcp-соединения на порт, TTL. Так же поддерживаются проверки для gRPC сервисов и приложений внутри Docker контейнеров. При этом балансировка нагрузки будет производиться только на здоровые ноды.</p>
+<p><strong>Kv store</strong> — простое хранилище типа ключ-значение. Можно использовать, чтобы хранить конфигурацию, данные для координации сервисов между собой, и тд.</p>
+<p><strong>Sessions</strong> — механизм сессий позволяет реализовать локи и семафоры для сервисов. Подробнее в документации: <a href="https://www.consul.io/docs/internals/sessions.html">сессии</a> и <a href="https://www.consul.io/docs/guides/semaphore.html">семафоры</a>.</p>
+<p><strong>Web ui</strong> — так как консул сравнивают со швейцарским ножом, логично было бы предположить, что у него есть классный UI. По-умолчанию, доступен по адресу <code>http://localhost:8500/ui</code> (в dev окружении). Смотрите <a href="https://demo.consul.io/ui/dc1/services">официальное live demo</a>.</p>
+<h2>Для чего можно использовать</h2>
+<h3>Service discovery с health checks</h3>
+<p>Собственно основная задача (для меня) - это service discrovery. Сюда же относится автоматическая балансировка запросов на живые ноды. Жизненный цикл сервиса выглядит так:</p>
+<ol>
+<li>Приложение регистрируется в каталоге, сообщая своё имя и порт. </li>
+<li>С помощью health checks производится проверка, что приложение работоспособно.</li>
+<li>Если приложение остановилось или упало, консул перестаёт балансировать на него нагрузку. В этот момент нода помечается как проблемная. По истечении определённого таймаута регистрация приложения удаляется. Актуальную информацию о проблемных нодах и их статусе, можно посмотреть в веб-интерфейсе.</li>
+</ol>
+<p>Получить адрес и порт нужного сервиса клиенты могут с помощью HTTP Api или DNS запросов (консул поднимает свой DNS сервер на порту 8600).
+Как использовать http api можно прочитать <a href="https://www.consul.io/api/health.html#list-nodes-for-service">здесь</a>, а про DNS <a href="https://www.consul.io/docs/agent/dns.html">здесь</a>.</p>
+<h3>Централизованное управление конфигурацией</h3>
+<p>Благодаря своему KV-store, Консул может выступать в роли центрального хранилища конфигурации для приложений. Работать это может двумя способами:</p>
+<ol>
+<li>
+<p>Если приложение конфигурируется через переменные окружения, то можно использовать утилиту <strong>envconsul</strong>, которая будет трансформировать ключи из KV хранилища в environment variables и запускать новый сервис. Это удобно тем, что при изменении конфигурации через consul ui, envconsul автоматически перезапустит нужный сервис.</p>
+</li>
+<li>
+<p>Приложение может само ходить в консул и брать нужные настройки оттуда. Это может быть удобно для изменения поведения приложения в рантайме, например, с помощью feature-flags.</p>
+</li>
+</ol>
+<p>Конечно, можно смешивать оба подхода для получения большего профита.</p>
+<h3>Балансировка нагрузки между сервисами</h3>
+<p>Консул автоматически балансирует нагрузку только на живые ноды. Здесь же затрону момент, когда необходим реверс-прокси.</p>
+<ol>
+<li>
+<p>nginx. Для балансировки через nginx приходится прописывать апстримы в конфиг-файле. Чтобы не делать этого вручную можно использовать утилиту <strong>consul-template</strong>, которая по шаблону сгенерирует конфигурационный файл (автоматически при старте и изменении статуса нод) с нужными хостами и портами и перезагрузит nginx.</p>
+</li>
+<li>
+<p>Для максимально ленивых есть <a href="https://github.com/fabiolb/fabio"><strong>fabio</strong></a> — load balancer для consul. Он умеет маршрутизировать запросы на живые ноды вообще без какой-либо конфигурации, автоматически. Всё, что нужно сделать, это добавить специальный тег для нужного сервиса, вот такого вида: <code>urlprefix-mysite.com/</code>. Помеченные таким тегом сервисы будут получать все запросы для <code>mysite.com/</code>.</p>
+</li>
+</ol>
+<p>Кроме HTTP, fabio умеет балансировать и TCP соединения.</p>
+<p>Также можно балансировать нагрузку между сервисами в <em>различных датацентрах</em> (geo failover), подробнее <a href="https://www.consul.io/docs/guides/geo-failover.html">по ссылке</a>.</p>
+<h3>Локи</h3>
+<p>Благодаря локам, можно запускать N сервисов в один момент времени.</p>
+<p>Например, у нас есть некий распределённый крон, который находится на 10 нодах. В этом кроне есть задача, которая должна работать в единственном числе один момент времени. Такое ограничение достаточно легко реализовать с помощью локов (<a href="https://www.consul.io/docs/commands/lock.html">подробнее в документации</a>).</p>
+<p>Вот пример, как запустить ровно один редис:</p>
+<pre class="code literal-block"><span></span>consul lock service/redis/lock redis-server
+</pre>
+
+
+<p>Как только редис крашнется, автоматически запустится инстанс на другой ноде.</p>
+<p>Отдельным плюсом является то, что <strong>это не требует конфигурации</strong>, что на порядок упрощает деплой и вообще снижает когнитивную нагрузку.</p>
+<h3>Регистрация внешних сервисов</h3>
+<p>В экосистеме, построенной на Consul можно регистрировать и внешние сервисы, например, базу данных.</p>
+<p>В качестве примера: есть два окружения — development и production. Сервисы в обоих этих окружениях зависят от одного и того же внешнего сервиса — базы данных, доступной по адресу <code>database.service.consul</code>.</p>
+<p>Соответственно, всё что нужно, это зарегистрировать нашу базу данных таким образом:</p>
+<pre class="code literal-block"><span></span><span class="c1"># Development</span>
+curl -X PUT -d <span class="s1">'{"name": "database", "port": 5432}'</span> http://localhost:8500/v1/agent/service/register
+
+<span class="c1"># Production</span>
+curl -X PUT -d <span class="s1">'{"name": "database", address: "db.production.com"}'</span> http://localhost:8500/v1/agent/service/register
+</pre>
+
+
+<p>Как видно, в production окружении регистрируется база данных по адресу <code>db.production.com</code>. Кстати, чтобы резолвить подобные адреса, необходимо консул настроить с параметром <a href="https://www.consul.io/docs/agent/options.html#_recursor">recursors</a>: </p>
+<pre class="code literal-block"><span></span>"recursors": ["8.8.8.8"]
+</pre>
+
+
+<h2>Итого</h2>
+<p>На мой взгляд, Consul на текущий момент это самая продвинутая и интерсная система, которая помогает уменьшить сложность деплоя, конфигурации и прочих инфраструктурных моментов.</p>
+<p>В следующей статье приведу примеры Python кода и покажу, как использовать service discovery и kv store.</p>
+<p>Вдохновение для статьи черпал отсюда:</p>
+<ul>
+<li><a href="https://www.consul.io/intro/getting-started/install.html">Официальная документация</a></li>
+<li><a href="https://www.youtube.com/watch?v=XZZDVUCCilM">Consul Infrastructure Recipes</a></li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav></nav></aside><section class="comments hidden-print"><h2>Комментарии</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="asyncee-github-io",
+            disqus_url="https://asyncee.github.io/posts/service-discovery-vmeste-s-consul/",
+        disqus_title="Service Discovery \u0432\u043c\u0435\u0441\u0442\u0435 \u0441 Consul",
+        disqus_identifier="cache/posts/2018-10-03-service-discovery-vmeste-s-consul.html",
+        disqus_config = function () {
+            this.language = "ru";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="asyncee-github-io";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+
+        <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter36001570 = new Ya.Metrika({
+                        id:36001570,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/36001570" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../../public/js/main.js"></script><script async src="../../public/js/medium-zoom.min.js" onload="initMediumZoom()"></script>
+</body>
+</html>

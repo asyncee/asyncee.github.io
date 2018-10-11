@@ -1,5 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asyncee</title><link>https://asyncee.github.io/</link><description>Stanislav Lobanov</description><atom:link href="https://asyncee.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>ru</language><lastBuildDate>Mon, 01 Oct 2018 18:06:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Блог переехал на Nikola</title><link>https://asyncee.github.io/posts/moved-to-nikola/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;Всем привет!&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asyncee</title><link>https://asyncee.github.io/</link><description>Stanislav Lobanov</description><atom:link href="https://asyncee.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>ru</language><lastBuildDate>Thu, 11 Oct 2018 15:18:24 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Service Discovery вместе с Consul</title><link>https://asyncee.github.io/posts/service-discovery-vmeste-s-consul/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;С ростом популярности микросервисов количество backend-компонентов растёт, иногда в геометрической прогрессии, особенно когда одному микросервису нужна своя база данных, кэш-сервер и т.д. Когда инфраструктуры становится много, возникают новые проблемы, которые тоже приходится решать. Одной из таких проблем является деплой и конфигурация.&lt;/p&gt;
+&lt;p&gt;Подходов к решению этой проблемы существует множество, одним из них является использование service discovery на основе Consul.&lt;/p&gt;
+&lt;p&gt;Consul - децентрализованная отказоустойчивая система, позволяющая сервисам находить друг друга в сети. Кроме service discovery в Consul есть health checks, kv store, locks и несколько утилит, чтобы всё это максимально эффективно использовать.&lt;/p&gt;
+&lt;p&gt;Тем, кто не знаком, советую сходить на &lt;a href="https://www.consul.io"&gt;официальный сайт&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;С точки зрения инфраструктуры Consul состоит из агента и сервера. По сути, это один бинарник, запущенный в разных режимах. Для защиты от splitbrain рекомендуется сервер запускать в количестве 3-5 инстансов.&lt;/p&gt;
+&lt;p&gt;Агенты же ставятся на каждую ноду с сервисом (например, в openvz контейнер). Таким образом, каждый сервис работает только с локальным агентом, располагающимся на порту 8500.&lt;/p&gt;
+&lt;p&gt;Консистентность обеспечивается за счёт того, что серверы общаются между собой по протоколу Raft, а клиенты — Gossip. В один конкретный момент времени есть только один Leader server, который принимает все запросы на запись и распространяет эту информацию по остальной сети. Вся остальная сеть, соответственно работает на чтение. Как очевидно, используется eventual consistency.&lt;/p&gt;
+&lt;h2&gt;Что умеет Consul&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Service discovery&lt;/strong&gt; — сервисы регистрируются в каталоге и могут запрашивать информацию о расположении друг друга в сети.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Health checks&lt;/strong&gt; — консул умеет получать информацию о состоянии сервисов c помощью http запросов, скриптов, tcp-соединения на порт, TTL. Так же поддерживаются проверки для gRPC сервисов и приложений внутри Docker контейнеров. При этом балансировка нагрузки будет производиться только на здоровые ноды.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Kv store&lt;/strong&gt; — простое хранилище типа ключ-значение. Можно использовать, чтобы хранить конфигурацию, данные для координации сервисов между собой, и тд.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Sessions&lt;/strong&gt; — механизм сессий позволяет реализовать локи и семафоры для сервисов. Подробнее в документации: &lt;a href="https://www.consul.io/docs/internals/sessions.html"&gt;сессии&lt;/a&gt; и &lt;a href="https://www.consul.io/docs/guides/semaphore.html"&gt;семафоры&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Web ui&lt;/strong&gt; — так как консул сравнивают со швейцарским ножом, логично было бы предположить, что у него есть классный UI. По-умолчанию, доступен по адресу &lt;code&gt;http://localhost:8500/ui&lt;/code&gt; (в dev окружении). Смотрите &lt;a href="https://demo.consul.io/ui/dc1/services"&gt;официальное live demo&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Для чего можно использовать&lt;/h2&gt;
+&lt;h3&gt;Service discovery с health checks&lt;/h3&gt;
+&lt;p&gt;Собственно основная задача (для меня) - это service discrovery. Сюда же относится автоматическая балансировка запросов на живые ноды. Жизненный цикл сервиса выглядит так:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Приложение регистрируется в каталоге, сообщая своё имя и порт. &lt;/li&gt;
+&lt;li&gt;С помощью health checks производится проверка, что приложение работоспособно.&lt;/li&gt;
+&lt;li&gt;Если приложение остановилось или упало, консул перестаёт балансировать на него нагрузку. В этот момент нода помечается как проблемная. По истечении определённого таймаута регистрация приложения удаляется. Актуальную информацию о проблемных нодах и их статусе, можно посмотреть в веб-интерфейсе.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Получить адрес и порт нужного сервиса клиенты могут с помощью HTTP Api или DNS запросов (консул поднимает свой DNS сервер на порту 8600).
+Как использовать http api можно прочитать &lt;a href="https://www.consul.io/api/health.html#list-nodes-for-service"&gt;здесь&lt;/a&gt;, а про DNS &lt;a href="https://www.consul.io/docs/agent/dns.html"&gt;здесь&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Централизованное управление конфигурацией&lt;/h3&gt;
+&lt;p&gt;Благодаря своему KV-store, Консул может выступать в роли центрального хранилища конфигурации для приложений. Работать это может двумя способами:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Если приложение конфигурируется через переменные окружения, то можно использовать утилиту &lt;strong&gt;envconsul&lt;/strong&gt;, которая будет трансформировать ключи из KV хранилища в environment variables и запускать новый сервис. Это удобно тем, что при изменении конфигурации через consul ui, envconsul автоматически перезапустит нужный сервис.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Приложение может само ходить в консул и брать нужные настройки оттуда. Это может быть удобно для изменения поведения приложения в рантайме, например, с помощью feature-flags.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Конечно, можно смешивать оба подхода для получения большего профита.&lt;/p&gt;
+&lt;h3&gt;Балансировка нагрузки между сервисами&lt;/h3&gt;
+&lt;p&gt;Консул автоматически балансирует нагрузку только на живые ноды. Здесь же затрону момент, когда необходим реверс-прокси.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;nginx. Для балансировки через nginx приходится прописывать апстримы в конфиг-файле. Чтобы не делать этого вручную можно использовать утилиту &lt;strong&gt;consul-template&lt;/strong&gt;, которая по шаблону сгенерирует конфигурационный файл (автоматически при старте и изменении статуса нод) с нужными хостами и портами и перезагрузит nginx.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Для максимально ленивых есть &lt;a href="https://github.com/fabiolb/fabio"&gt;&lt;strong&gt;fabio&lt;/strong&gt;&lt;/a&gt; — load balancer для consul. Он умеет маршрутизировать запросы на живые ноды вообще без какой-либо конфигурации, автоматически. Всё, что нужно сделать, это добавить специальный тег для нужного сервиса, вот такого вида: &lt;code&gt;urlprefix-mysite.com/&lt;/code&gt;. Помеченные таким тегом сервисы будут получать все запросы для &lt;code&gt;mysite.com/&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Кроме HTTP, fabio умеет балансировать и TCP соединения.&lt;/p&gt;
+&lt;p&gt;Также можно балансировать нагрузку между сервисами в &lt;em&gt;различных датацентрах&lt;/em&gt; (geo failover), подробнее &lt;a href="https://www.consul.io/docs/guides/geo-failover.html"&gt;по ссылке&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Локи&lt;/h3&gt;
+&lt;p&gt;Благодаря локам, можно запускать N сервисов в один момент времени.&lt;/p&gt;
+&lt;p&gt;Например, у нас есть некий распределённый крон, который находится на 10 нодах. В этом кроне есть задача, которая должна работать в единственном числе один момент времени. Такое ограничение достаточно легко реализовать с помощью локов (&lt;a href="https://www.consul.io/docs/commands/lock.html"&gt;подробнее в документации&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Вот пример, как запустить ровно один редис:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;consul lock service/redis/lock redis-server
+&lt;/pre&gt;
+
+
+&lt;p&gt;Как только редис крашнется, автоматически запустится инстанс на другой ноде.&lt;/p&gt;
+&lt;p&gt;Отдельным плюсом является то, что &lt;strong&gt;это не требует конфигурации&lt;/strong&gt;, что на порядок упрощает деплой и вообще снижает когнитивную нагрузку.&lt;/p&gt;
+&lt;h3&gt;Регистрация внешних сервисов&lt;/h3&gt;
+&lt;p&gt;В экосистеме, построенной на Consul можно регистрировать и внешние сервисы, например, базу данных.&lt;/p&gt;
+&lt;p&gt;В качестве примера: есть два окружения — development и production. Сервисы в обоих этих окружениях зависят от одного и того же внешнего сервиса — базы данных, доступной по адресу &lt;code&gt;database.service.consul&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Соответственно, всё что нужно, это зарегистрировать нашу базу данных таким образом:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Development&lt;/span&gt;
+curl -X PUT -d &lt;span class="s1"&gt;'{"name": "database", "port": 5432}'&lt;/span&gt; http://localhost:8500/v1/agent/service/register
+
+&lt;span class="c1"&gt;# Production&lt;/span&gt;
+curl -X PUT -d &lt;span class="s1"&gt;'{"name": "database", address: "db.production.com"}'&lt;/span&gt; http://localhost:8500/v1/agent/service/register
+&lt;/pre&gt;
+
+
+&lt;p&gt;Как видно, в production окружении регистрируется база данных по адресу &lt;code&gt;db.production.com&lt;/code&gt;. Кстати, чтобы резолвить подобные адреса, необходимо консул настроить с параметром &lt;a href="https://www.consul.io/docs/agent/options.html#_recursor"&gt;recursors&lt;/a&gt;: &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;"recursors": ["8.8.8.8"]
+&lt;/pre&gt;
+
+
+&lt;h2&gt;Итого&lt;/h2&gt;
+&lt;p&gt;На мой взгляд, Consul на текущий момент это самая продвинутая и интерсная система, которая помогает уменьшить сложность деплоя, конфигурации и прочих инфраструктурных моментов.&lt;/p&gt;
+&lt;p&gt;В следующей статье приведу примеры Python кода и покажу, как использовать service discovery и kv store.&lt;/p&gt;
+&lt;p&gt;Вдохновение для статьи черпал отсюда:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.consul.io/intro/getting-started/install.html"&gt;Официальная документация&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=XZZDVUCCilM"&gt;Consul Infrastructure Recipes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/service-discovery-vmeste-s-consul/</guid><pubDate>Thu, 11 Oct 2018 15:16:22 GMT</pubDate></item><item><title>Блог переехал на Nikola</title><link>https://asyncee.github.io/posts/moved-to-nikola/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;Всем привет!&lt;/p&gt;
 &lt;p&gt;Наконец-то блог переехал на Nikola, генератор сайтов на Python.&lt;/p&gt;
 &lt;p&gt;Год назад у меня полностью сменилось рабочее окружение, переехал на Mac.
 Ставить руби не хотелось, да и заново вспоминать и разбираться с Jekyll
@@ -449,57 +529,4 @@ UPDATE &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;/pre&gt;
 
 
-&lt;p&gt;Скрипт взят &lt;a href="https://gist.github.com/ffmike/877447"&gt;отсюда&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/ustanovka-postgresql-v-ubuntu-linut-mint/</guid><pubDate>Sun, 17 Apr 2016 20:00:00 GMT</pubDate></item><item><title>Шаблон для прототипирования компонентов на reactjs в браузере</title><link>https://asyncee.github.io/posts/shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/</link><dc:creator>Stanislav Lobanov</dc:creator><description>&lt;div&gt;&lt;p&gt;Недавно мне потребовалось очень быстро получить работающий прототип компонента на &lt;strong&gt;react&lt;/strong&gt;, а под рукой не оказалось стандартных инструментов для создания проекта. Поэтому я немного подумал — и создал шаблон для написания компонентов прямо в браузере.&lt;/p&gt;
-&lt;p&gt;Плюс данного решения — можно уже через минуту после клонирования проекта с шаблоном получить рабочий компонент, поддерживается &lt;strong&gt;ES6&lt;/strong&gt;, &lt;strong&gt;ES7&lt;/strong&gt;, &lt;strong&gt;JSX&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Минусов больше — решение нестандартное, официально не поддерживается, грузится долго (загрузка библиотек, транспайлинг). Но все эти нюансы не имеют никакого значения, если вам просто нужно получить рабочий прототип — посмотреть, проверить и переписать всё нормально.&lt;/p&gt;
-&lt;p&gt;Актуальную версию исходников можно получить &lt;a href="https://github.com/asyncee/react-minimal.git"&gt;по ссылке&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Сам код простой:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt; &lt;span class="na"&gt;lang&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"en"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;meta&lt;/span&gt; &lt;span class="na"&gt;charset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"UTF-8"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Minimal React&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;link&lt;/span&gt; &lt;span class="na"&gt;rel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text/css"&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"style.css"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.4.4/babel.min.js"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"https://code.jquery.com/jquery-2.2.3.min.js"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"https://fb.me/react-15.0.1.min.js"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"https://fb.me/react-dom-15.0.1.min.js"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
-            &lt;span class="nb"&gt;eval&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Babel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;transform&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'script[type="text/babel"]'&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="nx"&gt;presets&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'es2015'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'react'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'stage-0'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-            &lt;span class="p"&gt;}).&lt;/span&gt;&lt;span class="nx"&gt;code&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="p"&gt;})&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"app"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text/babel"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;HelloWorld&lt;/span&gt; &lt;span class="kr"&gt;extends&lt;/span&gt; &lt;span class="nx"&gt;React&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Component&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="nx"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="nx"&gt;greeting&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'Hello world!'&lt;/span&gt;
-            &lt;span class="p"&gt;}&lt;/span&gt;
-
-            &lt;span class="nx"&gt;render&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
-                    &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;div&lt;/span&gt; &lt;span class="nx"&gt;className&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"greeting"&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;greeting&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;/div&amp;gt;&lt;/span&gt;
-                &lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="p"&gt;}&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text/babel"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="nx"&gt;ReactDOM&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;HelloWorld&lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'app'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Как видно, для работы компонентов необходимо код размещать внутри тегов &lt;code&gt;script&lt;/code&gt; с атрибутом &lt;code&gt;type="text/babel"&lt;/code&gt;. Содержимое тегов конкатенируется, преобразуется в ES5 и исполняется.&lt;/p&gt;
-&lt;p&gt;Вот так всё просто.&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/shablon-dlya-prototipirovaniya-komponentov-na-reactjs-v-brauzere/</guid><pubDate>Tue, 12 Apr 2016 20:00:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;Скрипт взят &lt;a href="https://gist.github.com/ffmike/877447"&gt;отсюда&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><guid>https://asyncee.github.io/posts/ustanovka-postgresql-v-ubuntu-linut-mint/</guid><pubDate>Sun, 17 Apr 2016 20:00:00 GMT</pubDate></item></channel></rss>
