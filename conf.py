@@ -1045,12 +1045,12 @@ PRETTY_URLS = True
 
 # If True, publish future dated posts right away instead of scheduling them.
 # Defaults to False.
-# FUTURE_IS_NOW = False
+FUTURE_IS_NOW = False
 
 # If True, future dated posts are allowed in deployed output
 # Only the individual posts are published/deployed; not in indexes/sitemap
 # Generally, you want FUTURE_IS_NOW and DEPLOY_FUTURE to be the same value.
-# DEPLOY_FUTURE = False
+DEPLOY_FUTURE = False
 # If False, draft posts will not be deployed
 DEPLOY_DRAFTS = False
 
@@ -1058,7 +1058,7 @@ DEPLOY_DRAFTS = False
 # Specify an iCal Recurrence Rule: http://www.kanzaki.com/docs/ical/rrule.html
 # SCHEDULE_RULE = ''
 # If True, use the scheduling rule to all posts (not pages!) by default
-# SCHEDULE_ALL = False
+SCHEDULE_ALL = False
 
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
